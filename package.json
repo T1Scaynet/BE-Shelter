@@ -33,6 +33,8 @@
   },
   "eslintConfig": {
     "extends": "./node_modules/standard/eslintrc.json",
-    "semi": [2, "never"]
+    "rules": {
+        "semi": [2, "always"]
+    }
   }
 }
