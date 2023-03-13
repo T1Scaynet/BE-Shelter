@@ -1,4 +1,5 @@
 require('dotenv').config()
+require('./src/db')
 const { server } = require('./src/Models/server')
 const { PORT } = process.env
 
