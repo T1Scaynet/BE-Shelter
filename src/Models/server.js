@@ -1,6 +1,7 @@
 const express = require('express');
 const morgan = require('morgan');
-const petRoute = require('../Routes/petRoute');
+const { createPet, getAllPets } = require('../Controllers/petController');
+
 
 const server = express();
 
@@ -10,7 +11,8 @@ server.use(morgan('dev'));
 
 // Routes
 server.use('/', require('../Routes/prueba'));
-server.use('/pet', petRoute);
+server.use('/pet', getAllPets);
+server.use('/create', createPet);
 
 module.exports = {
   server
