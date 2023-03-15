@@ -10,6 +10,7 @@ server.use(morgan('dev'));
 
 // Routes
 server.use('/', require('../Routes/prueba'));
+server.use('/', require('../Routes/comment'));
 server.use('/pet', petRoute);
 
 module.exports = {
