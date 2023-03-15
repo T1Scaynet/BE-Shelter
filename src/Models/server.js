@@ -1,5 +1,6 @@
 const express = require('express');
 const morgan = require('morgan');
+const petRoute = require('../Routes/petRoute');
 
 const server = express();
 
@@ -10,6 +11,7 @@ server.use(morgan('dev'));
 // Routes
 server.use('/', require('../Routes/prueba'));
 server.use('/', require('../Routes/comment'));
+server.use('/pet', petRoute);
 
 module.exports = {
   server

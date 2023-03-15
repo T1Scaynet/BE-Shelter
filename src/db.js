@@ -1,8 +1,8 @@
-const mongoose = require('mongoose')
-require('dotenv').config()
+const mongoose = require('mongoose');
+require('dotenv').config();
 
 // String para la conexion con MongoDB Atlas
-const connection = `mongodb+srv://admin:${process.env.DB_PASSWORD}@db-refugio.lmdbpnj.mongodb.net/test`
+const connection = `mongodb+srv://admin:${process.env.DB_PASSWORD}@db-refugio.lmdbpnj.mongodb.net/test`;
 
 const mongoDB = () => {
   mongoose.connect(connection, {
@@ -11,12 +11,12 @@ const mongoDB = () => {
 
   })
     .then(() => {
-      console.log('db connected')
+      console.log('db connected');
     })
     .catch(error => {
-      console.error(error)
-    })
-}
+      console.error(error);
+    });
+};
 
-mongoose.set('strictQuery', false) // Este set es para evitar errores de version de mongoose
-mongoDB()
+mongoose.set('strictQuery', false); // Este set es para evitar errores de version de mongoose
+mongoDB();
