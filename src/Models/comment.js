@@ -13,11 +13,11 @@ const comment = new Schema({
     type: Number,
     required: true
   },
-  comment: {
+  comments: {
     type: String,
     max: 150,
     required: true
   }
 });
 
-module.exports = model('comment', comment);
+module.exports = model('Comment', comment);

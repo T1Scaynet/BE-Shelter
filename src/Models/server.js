@@ -13,6 +13,8 @@ server.use(morgan('dev'));
 server.use('/', require('../Routes/prueba'));
 server.use('/pet', getAllPets);
 server.use('/create', createPet);
+server.use('/', require('../Routes/comment'));
+server.use('/pet', petRoute);
 
 module.exports = {
   server

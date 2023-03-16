@@ -36,4 +36,4 @@ const petRequest = new Schema({
   }
 });
 
-module.exports = model('petRequest', petRequest);
+module.exports = model('PetRequest', petRequest);
