@@ -9,24 +9,25 @@ const getPet = (data) => {
     return false;
   }
 };
+
 pet.getAllPets = async (req, res) => {
-
   try {
-
     const allPets = await Pet.find();
-    
+
     let filteredPets = allPets;
 
     if (req.query.type) {
-      filteredPets = filteredPets.filter(pet => pet.type === req.query.type);
+      filteredPets = filteredPets.filter((pet) => pet.type === req.query.type);
     }
 
     if (req.query.genre) {
-      filteredPets = filteredPets.filter(pet => pet.genre === req.query.genre);
+      filteredPets = filteredPets.filter(
+        (pet) => pet.genre === req.query.genre
+      );
     }
 
     if (req.query.size) {
-      filteredPets = filteredPets.filter(pet => pet.size === req.query.size);
+      filteredPets = filteredPets.filter((pet) => pet.size === req.query.size);
     }
 
     if (req.query.sort === 'alphabetical') {
@@ -52,8 +53,6 @@ pet.getAllPets = async (req, res) => {
   }
 };
 
-
-
 pet.getPet = async (req, res) => {
   try {
     const pet = await Pet.findById(req.params.id);
@@ -74,8 +73,38 @@ pet.getPet = async (req, res) => {
 };
 
 pet.createPet = async (req, res) => {
-  const { name, type, genre, age, state, size, image, galery, weight, vaccine, castrated, disease, disability, coexistencePets, coexistenceKids } = req.body;
-  if (name && type && genre && age && state && size && image && galery && weight && vaccine && castrated && coexistencePets && coexistenceKids) {
+  const {
+    name,
+    type,
+    genre,
+    age,
+    state,
+    size,
+    image,
+    galery,
+    weight,
+    vaccine,
+    castrated,
+    disease,
+    disability,
+    coexistencePets,
+    coexistenceKids
+  } = req.body;
+  if (
+    name &&
+    type &&
+    genre &&
+    age &&
+    state &&
+    size &&
+    image &&
+    galery &&
+    weight &&
+    vaccine &&
+    castrated &&
+    coexistencePets &&
+    coexistenceKids
+  ) {
     try {
       const verifyName = await getPet({ name });
       if (verifyName) {
