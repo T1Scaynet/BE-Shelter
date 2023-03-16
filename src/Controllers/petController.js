@@ -66,13 +66,15 @@ pet.getPet = async (req, res) => {
       });
     }
   } catch {
-    return res.state(400).json({
+    return res.status(400).json({
       msg: 'Ocurrio un problema. intentalo nuevamente.'
     });
   }
 };
 
 pet.createPet = async (req, res) => {
+  const { name, type, genre, age, state, size, image, galery, history, weight, vaccine, castrated, disease, disability, coexistencePets, coexistenceKids } = req.body;
+  if (name && type && genre && age && state && size && image && galery && history && weight && vaccine && castrated && coexistencePets && coexistenceKids) {
   const {
     name,
     type,
@@ -105,6 +107,7 @@ pet.createPet = async (req, res) => {
     coexistencePets &&
     coexistenceKids
   ) {
+  
     try {
       const verifyName = await getPet({ name });
       if (verifyName) {
@@ -121,6 +124,7 @@ pet.createPet = async (req, res) => {
         size,
         image,
         galery,
+        history,
         weight,
         vaccine,
         castrated,
