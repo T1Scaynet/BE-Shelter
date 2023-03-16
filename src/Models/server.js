@@ -12,9 +12,9 @@ server.use(morgan('dev'));
 
 // Routes
 server.use('/', require('../Routes/prueba'));
-server.use('/pet', getAllPets);
-server.use('/create', createPet);
 server.use('/', require('../Routes/comment'));
+server.use('/', require('../Routes/petRoute'));
+server.use('/', require('../Routes/formRouter'));
 server.use('/pet', petRoute);
 server.use('/user', userRoute);
 
