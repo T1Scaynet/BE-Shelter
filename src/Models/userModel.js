@@ -1,12 +1,7 @@
-const { Schema, Types, model } = require('mongoose');
+const { Schema, model } = require('mongoose');
+const bcrypt = require('bcryptjs');
 
 const userSchema = new Schema({
-  id: {
-    type: Types.UUID,
-    default: Types.UUIDv4,
-    required: true,
-    unique: true
-  },
   name: {
     type: String,
     required: true
@@ -37,8 +32,7 @@ const userSchema = new Schema({
     required: true
   },
   avatar: {
-    type: String,
-    required: true
+    type: String
   },
   phone: {
     type: Number,
@@ -49,5 +43,16 @@ const userSchema = new Schema({
     default: new Date()
   }
 });
+
+// Metodos para las contraseñas
+
+userSchema.methods.verifyPassword = function (password) {
+  return bcrypt.compare(password, this.password);
+};
+
+userSchema.methods.encryptPassword = async (password) => {
+  const salt = await bcrypt.genSalt(10); // Encripto 10 veces la contraseña
+  return bcrypt.hash(password, salt);
+};
 
 module.exports = model('User', userSchema);
