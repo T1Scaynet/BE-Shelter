@@ -34,6 +34,10 @@ const petSchema = new Schema({
     type: Array,
     required: true
   },
+  history: {
+    type: String,
+    required: true
+  },
   weight: {
     type: Number,
     required: true
