@@ -28,7 +28,13 @@ pet.getAllPets = async (req, res) => {
     if (req.query.size) {
       filteredPets = filteredPets.filter(pet => pet.size === req.query.size);
     }
-    
+
+    if (req.query.sort === 'alphabetical') {
+      filteredPets.sort((a, b) => a.name.localeCompare(b.name));
+    }
+    if (req.query.sort === 'alphabetical_desc') {
+      filteredPets.sort((a, b) => b.name.localeCompare(a.name));
+    }
 
     if (!filteredPets.length) {
       return res.status(404).json({
