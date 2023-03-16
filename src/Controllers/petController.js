@@ -21,9 +21,7 @@ pet.getAllPets = async (req, res) => {
     }
 
     if (req.query.genre) {
-      filteredPets = filteredPets.filter(
-        (pet) => pet.genre === req.query.genre
-      );
+      filteredPets = filteredPets.filter((pet) => pet.genre === req.query.genre);
     }
 
     if (req.query.size) {
@@ -75,83 +73,55 @@ pet.getPet = async (req, res) => {
 pet.createPet = async (req, res) => {
   const { name, type, genre, age, state, size, image, galery, history, weight, vaccine, castrated, disease, disability, coexistencePets, coexistenceKids } = req.body;
   if (name && type && genre && age && state && size && image && galery && history && weight && vaccine && castrated && coexistencePets && coexistenceKids) {
-  const {
-    name,
-    type,
-    genre,
-    age,
-    state,
-    size,
-    image,
-    galery,
-    weight,
-    vaccine,
-    castrated,
-    disease,
-    disability,
-    coexistencePets,
-    coexistenceKids
-  } = req.body;
-  if (
-    name &&
-    type &&
-    genre &&
-    age &&
-    state &&
-    size &&
-    image &&
-    galery &&
-    weight &&
-    vaccine &&
-    castrated &&
-    coexistencePets &&
-    coexistenceKids
-  ) {
-  
-    try {
-      const verifyName = await getPet({ name });
-      if (verifyName) {
-        return res.status(400).json({
-          msg: 'El nombre de la mascota ya existe'
+    const { name, type, genre, age, state, size, image, galery, weight, vaccine, castrated, disease, disability, coexistencePets, coexistenceKids } = req.body;
+    if (name && type && genre && age && state && size && image && galery && weight && vaccine && castrated && coexistencePets && coexistenceKids) {
+      try {
+        const verifyName = await getPet({
+          name
         });
-      }
-      const newPet = new Pet({
-        name,
-        type,
-        genre,
-        age,
-        state,
-        size,
-        image,
-        galery,
-        history,
-        weight,
-        vaccine,
-        castrated,
-        disease,
-        disability,
-        coexistencePets,
-        coexistenceKids
-      });
-      const savePet = newPet.save();
-      if (savePet) {
-        return res.status(200).json({
-          msg: 'La mascota fue creada exitosamente!'
+        if (verifyName) {
+          return res.status(400).json({
+            msg: 'El nombre de la mascota ya existe'
+          });
+        }
+        const newPet = new Pet({
+          name,
+          type,
+          genre,
+          age,
+          state,
+          size,
+          image,
+          galery,
+          history,
+          weight,
+          vaccine,
+          castrated,
+          disease,
+          disability,
+          coexistencePets,
+          coexistenceKids
         });
-      } else {
+        const savePet = newPet.save();
+        if (savePet) {
+          return res.status(200).json({
+            msg: 'La mascota fue creada exitosamente!'
+          });
+        } else {
+          return res.status(400).json({
+            msg: 'Ocurrio un problema, intentalo nuevamente.'
+          });
+        }
+      } catch (error) {
         return res.status(400).json({
           msg: 'Ocurrio un problema, intentalo nuevamente.'
         });
       }
-    } catch (error) {
+    } else {
       return res.status(400).json({
-        msg: 'Ocurrio un problema, intentalo nuevamente.'
+        msg: 'Campos incompletos.'
       });
     }
-  } else {
-    return res.status(400).json({
-      msg: 'Campos incompletos.'
-    });
   }
 };
 
