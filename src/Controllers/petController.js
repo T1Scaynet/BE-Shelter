@@ -9,17 +9,34 @@ const getPet = (data) => {
     return false;
   }
 };
-
 pet.getAllPets = async (req, res) => {
+
   try {
+
     const allPets = await Pet.find();
-    if (!allPets.length) {
+    
+    let filteredPets = allPets;
+
+    if (req.query.type) {
+      filteredPets = filteredPets.filter(pet => pet.type === req.query.type);
+    }
+
+    if (req.query.genre) {
+      filteredPets = filteredPets.filter(pet => pet.genre === req.query.genre);
+    }
+
+    if (req.query.size) {
+      filteredPets = filteredPets.filter(pet => pet.size === req.query.size);
+    }
+    
+
+    if (!filteredPets.length) {
       return res.status(404).json({
         msg: 'No se encontraron mascotas.'
       });
     } else {
       return res.status(200).json({
-        allPets
+        filteredPets
       });
     }
   } catch (error) {
@@ -28,6 +45,8 @@ pet.getAllPets = async (req, res) => {
     });
   }
 };
+
+
 
 pet.getPet = async (req, res) => {
   try {
