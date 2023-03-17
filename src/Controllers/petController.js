@@ -12,7 +12,9 @@ const getPet = (data) => {
 
 pet.getAllPets = async (req, res) => {
   try {
+    
     const allPets = await Pet.find();
+
 
     let filteredPets = allPets;
 
@@ -48,6 +50,25 @@ pet.getAllPets = async (req, res) => {
     return res.status(404).json({
       msg: 'Ocurrio un problema, intenta nuevamente.'
     });
+  }
+};
+
+pet.getNamePets = async (req, res) => {  // esta es la funcion que se usa para la searchbar 
+  try {
+    const { name } = req.query;
+    const allPets = await Pet.find();
+
+    if(name){
+      let petName = allPets.filter( p => p.name.toLowerCase().includes(name.toLowerCase()))
+      petName.length ?
+      res.status(200).send(petName) :
+      res.status(404).send("Pet not found")
+      }else{
+          res.status(200).send(allPets);
+      }
+  }
+  catch(e){
+    res.status(400).json({ error: error.message });
   }
 };
 
