@@ -1,4 +1,5 @@
 const { Schema, model } = require('mongoose');
+const mongoosePaginate = require('mongoose-paginate-v2');
 
 const petSchema = new Schema({
   name: {
@@ -70,4 +71,5 @@ const petSchema = new Schema({
   }
 });
 
+petSchema.plugin(mongoosePaginate);
 module.exports = model('Pet', petSchema);
