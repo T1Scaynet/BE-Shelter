@@ -3,9 +3,6 @@ const { getAllPets, createPet, updatePet, deletePet, getPet } = require('../Cont
 
 const router = Router();
 
-router.get('/', getAllPets);
-router.get('/:id', getPet);
-
 // ADMIN
 router.post('/create', createPet);
 router.put('/update/:id', updatePet);
