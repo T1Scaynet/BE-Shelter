@@ -11,39 +11,55 @@ const getPet = (data) => {
 };
 
 pet.getAllPets = async (req, res) => {
+  const { type, genre, size, sort, page = 1, limit = 8 } = req.query;
+
+  const options = {
+    page: parseInt(page),
+    limit: parseInt(limit)
+  };
+
+  const filters = {};
+
+  if (type) {
+    filters.type = type;
+  }
+
+  if (genre) {
+    filters.genre = genre;
+  }
+
+  if (size) {
+    filters.size = size;
+  }
+  console.log(filters);
+  const sortOptions = {};
+
+  if (sort === 'alphabetical') {
+    sortOptions.name = 1;
+  }
+
+  if (sort === 'alphabetical_desc') {
+    sortOptions.name = -1;
+  }
+
   try {
-    const allPets = await Pet.find();
+    const result = await Pet.paginate(filters, {
+      ...options,
+      sort: sortOptions
+    });
 
-    let filteredPets = allPets;
-
-    if (req.query.type) {
-      filteredPets = filteredPets.filter((pet) => pet.type === req.query.type);
-    }
-
-    if (req.query.genre) {
-      filteredPets = filteredPets.filter((pet) => pet.genre === req.query.genre);
-    }
-
-    if (req.query.size) {
-      filteredPets = filteredPets.filter((pet) => pet.size === req.query.size);
-    }
-
-    if (req.query.sort === 'alphabetical') {
-      filteredPets.sort((a, b) => a.name.localeCompare(b.name));
-    }
-    if (req.query.sort === 'alphabetical_desc') {
-      filteredPets.sort((a, b) => b.name.localeCompare(a.name));
-    }
-
-    if (!filteredPets.length) {
+    if (!result.totalDocs) {
       return res.status(404).json({
         msg: 'No se encontraron mascotas.'
       });
-    } else {
-      return res.status(200).json({
-        filteredPets
-      });
     }
+
+    return res.status(200).json({
+      totalPages: result.totalPages,
+      currentPage: result.page,
+      totalItems: result.totalDocs,
+      pets: result.docs
+    });
   } catch (error) {
     return res.status(404).json({
       msg: 'Ocurrio un problema, intenta nuevamente.'
