@@ -3,10 +3,10 @@ const { postComment, getComments, deleteComment, putComment } = require('../Cont
 
 const router = Router();
 
-router.post('/comment', postComment);
-router.put('/comment/:id', putComment);
-router.delete('/comment/:id', deleteComment);
-router.get('/comment', getComments);
+router.post('/', postComment);
+router.put('/:id', putComment);
+router.delete('/:id', deleteComment);
+router.get('/', getComments);
 
 // router.get('/', pruebaGet)
 
