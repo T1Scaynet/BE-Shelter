@@ -185,4 +185,13 @@ pet.deletePet = async (req, res) => {
   }
 };
 
+pet.getFourPet = async (req, res) => {
+  try {
+    const cuatroUltimos = await Pet.find().limit(4);
+    return res.status(200).json(cuatroUltimos);
+  } catch (error) {
+    res.status(400).send(error.message);
+  }
+};
+
 module.exports = pet;
