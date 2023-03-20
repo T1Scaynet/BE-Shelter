@@ -11,7 +11,7 @@ const getPet = (data) => {
 };
 
 pet.getAllPets = async (req, res) => {
-  const { type, genre, size, sort, page = 1, limit = 8 } = req.query;
+  const { type, genre, size, sort, page = 1, limit = 8, search } = req.query;
 
   const options = {
     page: parseInt(page),
@@ -19,6 +19,16 @@ pet.getAllPets = async (req, res) => {
   };
 
   const filters = {};
+
+  if (search) {
+    filters.$or = [
+      { name: { $regex: search, $options: "i" } },
+      { type: { $regex: search, $options: "i" } }, // esto es opcional por si queres buscar por type
+      { genre: { $regex: search, $options: "i" } },// esto es opcional por si queres buscar por genero
+      { size: { $regex: search, $options: "i" } }  // esto es opcional por si queres buscar por size 
+    ];
+  }
+  
 
   if (type) {
     filters.type = type;
@@ -43,7 +53,8 @@ pet.getAllPets = async (req, res) => {
   }
 
   try {
-    const result = await Pet.paginate(filters, {
+
+    const result = await Pet.paginate({ ...filters }, {
       ...options,
       sort: sortOptions
     });
@@ -58,6 +69,8 @@ pet.getAllPets = async (req, res) => {
       totalPages: result.totalPages,
       currentPage: result.page,
       totalItems: result.totalDocs,
+      search: search,
+      filters: filters,
       pets: result.docs
     });
   } catch (error) {
