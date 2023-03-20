@@ -23,6 +23,9 @@ pet.getAllPets = async (req, res) => {
   if (search) {
     filters.$or = [
       { name: { $regex: search, $options: "i" } },
+      { type: { $regex: search, $options: "i" } }, // esto es opcional por si queres buscar por type
+      { genre: { $regex: search, $options: "i" } },// esto es opcional por si queres buscar por genero
+      { size: { $regex: search, $options: "i" } }  // esto es opcional por si queres buscar por size 
     ];
   }
   
