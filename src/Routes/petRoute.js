@@ -3,10 +3,7 @@ const { getAllPets, createPet, updatePet, deletePet, getPet, getFourPet, createP
 
 const router = Router();
 
-// ADMIN
-router.post('/create', createPet);
-router.put('/update/:id', updatePet);
-router.delete('/delete/:id', deletePet);
+// USER --
 router.get('/firtsPets', getFourPet);
 router.get('/', getAllPets);
 router.get('/:id', getPet);

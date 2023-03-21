@@ -17,6 +17,10 @@ const comment = new Schema({
     type: String,
     max: 150,
     required: true
+  },
+  createAt: {
+    type: Date,
+    default: new Date()
   }
 });
 
