@@ -60,9 +60,9 @@ user.register = async (req, res) => {
         avatar,
         phone
       });
-      console.log(newUser);
+
       newUser.password = await newUser.encryptPassword(newUser.password); // Encripto la contrasesña
-      console.log(newUser);
+
       const saveUser = newUser.save();
 
       if (saveUser) {

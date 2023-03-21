@@ -2,8 +2,6 @@ const PetRequest = require('../Models/petRequest');
 
 const postForm = async (req, res) => {
   const { idPet, idUser, otherPets, garden, children, adoption, familyMembers } = req.body;
-  // console.log(req.body);
-  // console.log(Object.values(req.body));
   if (Object.values(req.body).length === 0) throw Error('Faltan datos');
   try {
     const newForm = new PetRequest({
@@ -17,7 +15,6 @@ const postForm = async (req, res) => {
     });
     newForm.save();
     res.status(200).json(newForm);
-    // res.status(200).send('request successfully sent');
   } catch (error) {
     res.status(400).send(error.message);
   }
@@ -26,7 +23,6 @@ const postForm = async (req, res) => {
 const deleteForm = async (req, res) => {
   try {
     const deleted = await PetRequest.findByIdAndDelete(req.params.id);
-    // res.status(200).json(deleted);
     res.status(200).send(`el formulario con el id: ${deleted.id}, fue eliminado correctamente`);
   } catch (error) {
     res.status(400).send(error.message);

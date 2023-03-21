@@ -22,13 +22,12 @@ pet.getAllPets = async (req, res) => {
 
   if (search) {
     filters.$or = [
-      { name: { $regex: search, $options: "i" } },
-      { type: { $regex: search, $options: "i" } }, // esto es opcional por si queres buscar por type
-      { genre: { $regex: search, $options: "i" } },// esto es opcional por si queres buscar por genero
-      { size: { $regex: search, $options: "i" } }  // esto es opcional por si queres buscar por size 
+      { name: { $regex: search, $options: 'i' } },
+      { type: { $regex: search, $options: 'i' } }, // esto es opcional por si queres buscar por type
+      { genre: { $regex: search, $options: 'i' } }, // esto es opcional por si queres buscar por genero
+      { size: { $regex: search, $options: 'i' } } // esto es opcional por si queres buscar por size
     ];
   }
-  
 
   if (type) {
     filters.type = type;
@@ -41,7 +40,7 @@ pet.getAllPets = async (req, res) => {
   if (size) {
     filters.size = size;
   }
-  console.log(filters);
+
   const sortOptions = {};
 
   if (sort === 'alphabetical') {
@@ -53,7 +52,6 @@ pet.getAllPets = async (req, res) => {
   }
 
   try {
-
     const result = await Pet.paginate({ ...filters }, {
       ...options,
       sort: sortOptions
@@ -69,8 +67,8 @@ pet.getAllPets = async (req, res) => {
       totalPages: result.totalPages,
       currentPage: result.page,
       totalItems: result.totalDocs,
-      search: search,
-      filters: filters,
+      search,
+      filters,
       pets: result.docs
     });
   } catch (error) {
@@ -102,57 +100,55 @@ pet.getPet = async (req, res) => {
 pet.createPet = async (req, res) => {
   const { name, type, genre, age, state, size, image, galery, history, weight, vaccine, castrated, disease, disability, coexistencePets, coexistenceKids } = req.body;
   if (name && type && genre && age && state && size && image && galery && history && weight && vaccine && castrated && coexistencePets && coexistenceKids) {
-    const { name, type, genre, age, state, size, image, galery, weight, vaccine, castrated, disease, disability, coexistencePets, coexistenceKids } = req.body;
-    if (name && type && genre && age && state && size && image && galery && weight && vaccine && castrated && coexistencePets && coexistenceKids) {
-      try {
-        const verifyName = await getPet({
-          name
+    try {
+      const verifyName = await getPet({
+        name
+      });
+      if (verifyName) {
+        return res.status(400).json({
+          msg: 'El nombre de la mascota ya existe'
         });
-        if (verifyName) {
-          return res.status(400).json({
-            msg: 'El nombre de la mascota ya existe'
-          });
-        }
-        const newPet = new Pet({
-          name,
-          type,
-          genre,
-          age,
-          state,
-          size,
-          image,
-          galery,
-          history,
-          weight,
-          vaccine,
-          castrated,
-          disease,
-          disability,
-          coexistencePets,
-          coexistenceKids
+      }
+      const newPet = new Pet({
+        name,
+        type,
+        genre,
+        age,
+        state,
+        size,
+        image,
+        galery,
+        history,
+        weight,
+        vaccine,
+        castrated,
+        disease,
+        disability,
+        coexistencePets,
+        coexistenceKids
+      });
+      const savePet = newPet.save();
+      if (savePet) {
+        return res.status(200).json({
+          msg: 'La mascota fue creada exitosamente!'
         });
-        const savePet = newPet.save();
-        if (savePet) {
-          return res.status(200).json({
-            msg: 'La mascota fue creada exitosamente!'
-          });
-        } else {
-          return res.status(400).json({
-            msg: 'Ocurrio un problema, intentalo nuevamente.'
-          });
-        }
-      } catch (error) {
+      } else {
         return res.status(400).json({
           msg: 'Ocurrio un problema, intentalo nuevamente.'
         });
       }
-    } else {
+    } catch (error) {
       return res.status(400).json({
-        msg: 'Campos incompletos.'
+        msg: 'Ocurrio un problema, intentalo nuevamente.'
       });
     }
+  } else {
+    return res.status(400).json({
+      msg: 'Campos incompletos.'
+    });
   }
-};
+}
+;
 
 pet.updatePet = async (req, res) => {
   const pet = await Pet.findById(req.params.id);

@@ -1,10 +1,6 @@
 const { request, response } = require('express');
 const Comment = require('../Models/comment');
 
-/* const pruebaGet = (req = request, res = response) => {
-  res.status(200).send('Hello Word')
-} */
-
 const postComment = (req = request, res = response) => {
   const { idPet, idUser, stars, comments } = req.body;
   if (!idPet || !idUser || !stars) throw Error('Faltan datos');

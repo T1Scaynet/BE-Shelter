@@ -3,11 +3,14 @@ const { login, register, updateUser, deleteUser, getUser } = require('../Control
 
 const router = Router();
 
+// USER --
 router.post('/login', login);
 router.post('/register', register);
+
 // CLIENT --
 router.put('/update/:id', updateUser);
 router.delete('/delete/:id', deleteUser);
+
 // ADMIN --
 router.get('/:id', getUser);
 
