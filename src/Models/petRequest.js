@@ -1,10 +1,6 @@
 const { Schema, model } = require('mongoose');
 
 const petRequest = new Schema({
-  dateNow: {
-    type: Date,
-    default: new Date()
-  },
   idUser: {
     type: String,
     required: true
@@ -33,6 +29,10 @@ const petRequest = new Schema({
   familyMembers: {
     type: Number,
     required: true
+  },
+  createAt: {
+    type: Date,
+    default: new Date()
   }
 });
 

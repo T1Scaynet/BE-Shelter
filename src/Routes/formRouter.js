@@ -3,11 +3,12 @@ const { postForm, deleteForm, getAllForms, getAForm } = require('../Controllers/
 
 const router = Router();
 
-router.post('/', postForm); // mandar el form
-router.delete('/:id', deleteForm); // borrar un form
-router.get('/', getAllForms); // todos los form
-router.get('/:id', getAForm); // un form
+// CLIENT --
+router.post('/', postForm);
 
-// router.get('/', pruebaGet)
+// ADMIN --
+router.delete('/:id', deleteForm);
+router.get('/', getAllForms);
+router.get('/:id', getAForm);
 
 module.exports = router;
