@@ -1,4 +1,5 @@
 const User = require('../Models/userModel');
+const nodemailer = require('nodemailer')
 
 const user = {};
 
@@ -9,6 +10,31 @@ const getUser = (data) => {
     return false;
   }
 };
+
+// const sendMail = async(email) => {
+//   const config = {
+//       host: 'smtp.gmail.com',
+//       port: 587,
+//       auth: {
+//           user: 'fundacionhenry@gmail.com',
+//           pass: 'nbonexicixldqxzc'
+//       }
+//   }
+
+//   const mensaje = {
+//       from : 'fundacionhenry@gmail.com',
+//       to : email,
+//       subject : 'Correo de prueba de bienvenida',
+//       text : 'Envio de correo'
+//   }
+
+//   const transport = nodemailer.createTransport(config)
+
+//   const info = await transport.sendMail(mensaje)
+
+//   console.log(info)
+// }
+
 
 user.login = async (req, res) => {
   const { email, password } = req.body;
@@ -43,7 +69,30 @@ user.register = async (req, res) => {
   if (name && lastName && email && age && password && dni && address && phone) {
     try {
       const verifyEmail = await getUser({ email });
-
+      
+      const sendMail = async(email) => {
+        const config = {
+            host: 'smtp.gmail.com',
+            port: 587,
+            auth: {
+                user: 'fundacionhenry@gmail.com',
+                pass: 'nbonexicixldqxzc'
+            }
+        }
+      
+        const mensaje = {
+            from : 'fundacionhenry@gmail.com',
+            to : email,
+            subject : 'Correo de prueba de bienvenida',
+            text : 'Envio de correo'
+        }
+      
+        const transport = nodemailer.createTransport(config)
+      
+        const info = await transport.sendMail(mensaje)
+      
+        console.log(info)
+      }
       if (verifyEmail) {
         return res.status(400).json({
           msg: 'El Email ya existe.'
@@ -66,6 +115,7 @@ user.register = async (req, res) => {
       const saveUser = newUser.save();
 
       if (saveUser) {
+        sendMail(email)
         return res.status(200).json({
           msg: 'Usuario creado correctamente.'
         });
