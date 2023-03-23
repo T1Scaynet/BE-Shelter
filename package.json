@@ -1,0 +1,53 @@
+{
+  "name": "be-shelter",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon app.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/T1Scaynet/BE-Shelter.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/T1Scaynet/BE-Shelter/issues"
+  },
+  "homepage": "https://github.com/T1Scaynet/BE-Shelter#readme",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "cors": "^2.8.5",
+    "crypto": "^1.0.1",
+    "crypto-js": "^4.1.1",
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
+    "express-session": "^1.17.3",
+    "express-validator": "^6.15.0",
+    "jsonwebtoken": "^9.0.0",
+    "mercadopago": "^1.5.15",
+    "mongoose": "^7.0.1",
+    "mongoose-paginate-v2": "^1.7.1",
+    "morgan": "^1.10.0",
+    "nodemon": "^2.0.21",
+    "passport": "^0.6.0",
+    "passport-google-oauth20": "^2.0.0",
+    "nodemailer": "^6.9.1"
+  },
+  "devDependencies": {
+    "prettier": "^2.8.4",
+    "standard": "^17.0.0"
+  },
+  "eslintConfig": {
+    "extends": "./node_modules/standard/eslintrc.json",
+    "rules": {
+      "semi": [
+        2,
+        "always"
+      ]
+    }
+  }
+}
