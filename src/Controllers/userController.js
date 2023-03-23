@@ -48,6 +48,10 @@ user.login = async (req, res) => {
     }
     try {
       return res.status(200).json({
+        user: {
+          name: verifyEmail.name,
+          password: verifyEmail.email
+        },
         msg: 'Logeado correctamente.'
       });
     } catch (error) {
