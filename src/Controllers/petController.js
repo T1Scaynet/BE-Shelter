@@ -1,3 +1,5 @@
+const { response } = require('express');
+const mercadopago = require('mercadopago');
 const Pet = require('../Models/petModel');
 
 const pet = {};
@@ -149,6 +151,33 @@ pet.createPet = async (req, res) => {
   }
 }
 ;
+
+// pet.createPayment = async (req, res) => {
+//   const products = req.body;
+
+//   let preference = {
+//     items: [{
+//       id: 123,
+//       title: products.title,
+//       currency_id: 'ARS',
+//       picture_url: products.image,
+//       description: products.description,
+//       category_id: 'art',
+//       quantity: 1,
+//       unit_price: products.price
+//     }],
+//     back_urls: {
+//       success: 'http://localhost:3000',
+//       failure:'',
+//       pending:'',
+//     },
+//     auto_return: 'approved',
+//     binary_mode: true,
+//   }
+//   mercadopago.preferences.create(preference)
+//     .then((response)=> res.status(200).send(response))
+//     .catch((error)=> res.status(400).send({error: error.message}))
+// };
 
 pet.updatePet = async (req, res) => {
   const pet = await Pet.findById(req.params.id);

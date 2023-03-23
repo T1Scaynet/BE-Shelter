@@ -1,12 +1,15 @@
 const { Router } = require('express');
 const { login, register, updateUser, deleteUser, getUser, profile, getAllUser } = require('../Controllers/userController');
 const { authToken, isAdmin } = require('../Middlewares/authToken');
-
+const { forgotPassword, resetPassword } = require('../Controllers/emailController');
 const router = Router();
 
 // USER --
 router.post('/login', login);
 router.post('/register', register);
+// EMAIL
+router.post('/forgot', forgotPassword);
+router.post('/reset', resetPassword);
 
 // CLIENT --
 router.put('/update/:id', updateUser);
