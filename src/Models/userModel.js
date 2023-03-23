@@ -23,6 +23,15 @@ const userSchema = new Schema({
     type: String,
     required: false
   },
+  //Esto es lo que acabo de agregar 
+  resetPasswordToken: {
+    type: String,
+    default: null
+  },
+  resetPasswordExpires: {
+    type: Date,
+    default: null
+  },
   dni: {
     type: Number,
     required: false
