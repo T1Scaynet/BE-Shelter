@@ -12,6 +12,7 @@ const userRoute = require('./Routes/userRoute');
 const commentRoute = require('./Routes/commentRoute');
 const formRoute = require('./Routes/formRouter');
 const createPayment = require('./Routes/petPayment')
+const reset = require('./Routes/userRoute')
 
 const server = express();
 
@@ -26,6 +27,7 @@ server.use('/form', formRoute);
 server.use('/pet', petRoute);
 server.use('/user', userRoute);
 server.use('/payment', createPayment)
+server.use('/', reset)
 
 module.exports = {
   server
