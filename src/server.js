@@ -12,11 +12,13 @@ const petRoute = require('./Routes/petRoute');
 const userRoute = require('./Routes/userRoute');
 const commentRoute = require('./Routes/commentRoute');
 const formRoute = require('./Routes/formRouter');
+const createRole = require('./libs/createRole');
 const createPayment = require('./Routes/petPayment');
 const reset = require('./Routes/userRoute');
 const socialRoute = require('./Routes/socialRoute');
 
 const server = express();
+createRole(); // Crea los roles en la db cuando inicia el server
 
 // Middlewares
 server.use(cors());

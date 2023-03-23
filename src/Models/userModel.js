@@ -15,26 +15,14 @@ const userSchema = new Schema({
     required: true,
     unique: true
   },
-  age: {
-    type: Number,
-    required: false
+  birthdate: {
+    type: Date
   },
   password: {
-    type: String,
-    required: false
-  },
-  //Esto es lo que acabo de agregar 
-  resetPasswordToken: {
-    type: String,
-    default: null
-  },
-  resetPasswordExpires: {
-    type: Date,
-    default: null
+    type: String
   },
   dni: {
-    type: Number,
-    required: false
+    type: Number
   },
   address: {
     type: String,
@@ -47,6 +35,10 @@ const userSchema = new Schema({
     type: Number,
     required: false
   },
+  roles: [{
+    ref: 'Role',
+    type: Schema.Types.ObjectId
+  }],
   createAt: {
     type: Date,
     default: new Date()
