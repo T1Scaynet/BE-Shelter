@@ -15,29 +15,28 @@ const userSchema = new Schema({
     required: true,
     unique: true
   },
-  age: {
-    type: Number,
-    required: true
+  birthdate: {
+    type: Date
   },
   password: {
-    type: String,
-    required: true
+    type: String
   },
   dni: {
-    type: Number,
-    required: true
+    type: Number
   },
   address: {
-    type: String,
-    required: true
+    type: String
   },
   avatar: {
     type: String
   },
   phone: {
-    type: Number,
-    required: true
+    type: Number
   },
+  roles: [{
+    ref: 'Role',
+    type: Schema.Types.ObjectId
+  }],
   createAt: {
     type: Date,
     default: new Date()

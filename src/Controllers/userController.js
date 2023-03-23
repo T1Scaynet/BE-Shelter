@@ -1,4 +1,7 @@
 const User = require('../Models/userModel');
+const Role = require('../Models/roleModel');
+const jwt = require('jsonwebtoken');
+require('dotenv').config();
 
 const user = {};
 
@@ -12,18 +15,22 @@ const getUser = (data) => {
 
 user.login = async (req, res) => {
   const { email, password } = req.body;
-  const verifyEmail = await getUser({ email });
-  console.log(verifyEmail);
-  if (verifyEmail) {
-    const verifyPassword = await verifyEmail.verifyPassword(password);
+  const verifyUser = await getUser({ email });
+  if (verifyUser) {
+    const verifyPassword = await verifyUser.verifyPassword(password);
+
     if (!verifyPassword) {
       return res.status(400).json({
         msg: 'Email o contraseña incorrectos.'
       });
     }
     try {
+      const token = jwt.sign(verifyUser._id.toString(), process.env.PRIVATE_TOKEN);
+
       return res.status(200).json({
-        msg: 'Logeado correctamente.'
+        msg: 'Logeado correctamente.',
+        auth: true,
+        token
       });
     } catch (error) {
       return res.status(400).json({
@@ -38,13 +45,13 @@ user.login = async (req, res) => {
 };
 
 user.register = async (req, res) => {
-  const { name, lastName, email, age, password, dni, address, avatar, phone } = req.body;
+  const { name, lastName, email, birthdate, password, dni, address, avatar, phone, roles } = req.body;
 
-  if (name && lastName && email && age && password && dni && address && phone) {
+  if (name && lastName && email) {
     try {
-      const verifyEmail = await getUser({ email });
+      const verifyUser = await getUser({ email }).populate('roles'); // El populate es para que me relacione a los roles con id
 
-      if (verifyEmail) {
+      if (verifyUser) {
         return res.status(400).json({
           msg: 'El Email ya existe.'
         });
@@ -53,21 +60,30 @@ user.register = async (req, res) => {
         name,
         lastName,
         email,
-        age,
+        birthdate,
         password,
         dni,
         address,
         avatar,
-        phone
+        phone,
+        roles
       });
+      newUser.password = await newUser.encryptPassword(newUser.password); // Encripto la password
+      if (roles) {
+        const foundRoles = await Role.find({ name: { $in: roles } });
+        newUser.roles = foundRoles.map(role => role._id);
+      } else {
+        const role = await Role.findOne({ name: 'client' });
+        newUser.roles = [role.id];
+      }
+      const saveUser = await newUser.save();
+      const token = jwt.sign({ id: saveUser._id }, process.env.PRIVATE_TOKEN);
 
-      newUser.password = await newUser.encryptPassword(newUser.password); // Encripto la contrasesña
-
-      const saveUser = newUser.save();
-
-      if (saveUser) {
+      if (token) {
         return res.status(200).json({
-          msg: 'Usuario creado correctamente.'
+          msg: 'Usuario creado correctamente.',
+          auth: true,
+          token
         });
       } else {
         return res.status(400).json({
@@ -149,4 +165,36 @@ user.getUser = async (req, res) => {
   }
 };
 
+user.getAllUser = async (req, res) => {
+  try {
+    const allUsers = await User.find();
+
+    return res.status(200).json({
+      allUsers
+    });
+  } catch (error) {
+    return res.state(400).json({
+      msg: 'Ocurrio un problema, intentalo nuevamente.'
+    });
+  }
+};
+
+user.profile = async (req, res) => {
+  try {
+    const user = await User.findById(req.userId);
+    if (!user) {
+      return res.status(404).json({
+        msg: 'The user not found.'
+      });
+    } else {
+      return res.status(200).json({
+        user
+      });
+    }
+  } catch (error) {
+    return res.state(400).json({
+      msg: 'Ocurrio un problema, intentalo nuevamente.'
+    });
+  }
+};
 module.exports = user;

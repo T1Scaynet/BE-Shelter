@@ -1,5 +1,6 @@
 const { Router } = require('express');
 const { postForm, deleteForm, getAllForms, getAForm } = require('../Controllers/formController');
+const { authToken, isAdmin } = require('../Middlewares/authToken');
 
 const router = Router();
 
@@ -7,8 +8,8 @@ const router = Router();
 router.post('/', postForm);
 
 // ADMIN --
-router.delete('/:id', deleteForm);
-router.get('/', getAllForms);
-router.get('/:id', getAForm);
+router.delete('/:id', authToken, isAdmin, deleteForm);
+router.get('/', authToken, isAdmin, getAllForms);
+router.get('/:id', authToken, isAdmin, getAForm);
 
 module.exports = router;
