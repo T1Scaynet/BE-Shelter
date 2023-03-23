@@ -8,7 +8,7 @@ const userSchema = new Schema({
   },
   lastName: {
     type: String,
-    required: true
+    required: false
   },
   email: {
     type: String,
@@ -17,11 +17,11 @@ const userSchema = new Schema({
   },
   age: {
     type: Number,
-    required: true
+    required: false
   },
   password: {
     type: String,
-    required: true
+    required: false
   },
   //Esto es lo que acabo de agregar 
   resetPasswordToken: {
@@ -34,18 +34,18 @@ const userSchema = new Schema({
   },
   dni: {
     type: Number,
-    required: true
+    required: false
   },
   address: {
     type: String,
-    required: true
+    required: false
   },
   avatar: {
     type: String
   },
   phone: {
     type: Number,
-    required: true
+    required: false
   },
   createAt: {
     type: Date,
