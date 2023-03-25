@@ -108,8 +108,8 @@ pet.getPet = async (req, res) => {
 };
 
 pet.createPet = async (req, res) => {
-  const { name, type, genre, age, state, size, image, galery, history, weight, vaccine, castrated, disease, disability, coexistencePets, coexistenceKids } = req.body;
-  if (name && type && genre && age && state && size && image && galery && history && weight && vaccine && castrated && coexistencePets && coexistenceKids) {
+  const { name, type, genre, age, state, size, galery, history, weight, vaccine, castrated, disease, disability, coexistencePets, coexistenceKids } = req.body;
+  if (name && type && genre && age && state && size && galery && history && weight && vaccine && castrated && coexistencePets && coexistenceKids) {
     try {
       const verifyName = await getPet({
         name
@@ -126,7 +126,6 @@ pet.createPet = async (req, res) => {
         age,
         state,
         size,
-        image,
         galery,
         history,
         weight,
