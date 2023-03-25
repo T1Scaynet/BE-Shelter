@@ -1,22 +1,17 @@
 const { Schema, model } = require('mongoose');
 
-const comment = new Schema({
-  idPet: {
-    ref: 'Pet',
-    type: Schema.Types.ObjectId
-  },
+const paymentSchema = new Schema({
   idUser: {
     ref: 'User',
     type: Schema.Types.ObjectId
   },
-  stars: {
+  amount: {
     type: Number,
-    required: true
+    require: true
   },
-  comments: {
+  title: {
     type: String,
-    max: 150,
-    required: true
+    require: true
   },
   createAt: {
     type: Date,
@@ -24,4 +19,4 @@ const comment = new Schema({
   }
 });
 
-module.exports = model('Comment', comment);
+module.exports = model('Payment', paymentSchema);

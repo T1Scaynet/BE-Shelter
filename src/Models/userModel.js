@@ -39,6 +39,10 @@ const userSchema = new Schema({
     ref: 'Role',
     type: Schema.Types.ObjectId
   }],
+  adoptions: [{
+    ref: 'Pet',
+    type: Schema.Types.ObjectId
+  }],
   createAt: {
     type: Date,
     default: new Date()

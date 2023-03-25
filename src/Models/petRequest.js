@@ -1,13 +1,13 @@
 const { Schema, model } = require('mongoose');
 
 const petRequest = new Schema({
-  idUser: {
-    type: String,
-    required: true
-  },
   idPet: {
-    type: String,
-    required: true
+    ref: 'Pet',
+    type: Schema.Types.ObjectId
+  },
+  idUser: {
+    ref: 'User',
+    type: Schema.Types.ObjectId
   },
   otherPets: {
     type: Boolean,
@@ -29,6 +29,10 @@ const petRequest = new Schema({
   familyMembers: {
     type: Number,
     required: true
+  },
+  // Puede tener 3 estados: Aprobado, Desaprobado y en proceso
+  state: {
+    type: String
   },
   createAt: {
     type: Date,

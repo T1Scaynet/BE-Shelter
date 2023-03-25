@@ -2,7 +2,10 @@ const { request, response } = require('express');
 const Comment = require('../Models/comment');
 
 const postComment = (req = request, res = response) => {
-  const { idPet, idUser, stars, comments } = req.body;
+  const idUser = req.userId;
+  const { idPet, stars, comments } = req.body;
+
+  console.log(idUser);
   if (!idPet || !idUser || !stars) throw Error('Faltan datos');
   try {
     const newComment = new Comment({
