@@ -3,10 +3,35 @@ const { Schema, model } = require('mongoose');
 const petRequest = new Schema({
   idUser: {
     type: String,
-    required: true
+    required: false
   },
   idPet: {
     type: String,
+    required: false
+  },
+  name: {
+    type: String,
+    required: true
+  },
+  lastName: {
+    type: String,
+    required: true
+  },
+  address: {
+    type: String,
+    required: true
+  },
+  email: {
+    type: String,
+    required: true,
+    unique: true
+  },
+  phone: {
+    type: Number,
+    required: true
+  },
+  age: {
+    type: Number,
     required: true
   },
   otherPets: {

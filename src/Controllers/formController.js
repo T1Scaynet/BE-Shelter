@@ -1,12 +1,21 @@
 const PetRequest = require('../Models/petRequest');
 
 const postForm = async (req, res) => {
-  const { idPet, idUser, otherPets, garden, children, adoption, familyMembers } = req.body;
+  console.log('En backen', req.body);
+  const {
+    idPet, idUser, otherPets, garden, children, adoption, familyMembers, name, lastName, address, email, phone, age
+  } = req.body;
   if (Object.values(req.body).length === 0) throw Error('Faltan datos');
   try {
     const newForm = new PetRequest({
       idPet,
       idUser,
+      name,
+      lastName,
+      address,
+      email,
+      phone,
+      age,
       otherPets,
       garden,
       children,
