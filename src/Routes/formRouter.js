@@ -1,13 +1,13 @@
 const { Router } = require('express');
-const { postForm, deleteForm, getAllForms, getAForm } = require('../Controllers/formController');
+const { postForm, deleteForm, getAllForms, getForm, stateForm } = require('../Controllers/formController');
 const { postContactForm, getAllContactForms, getAContactForm, deleteContactForm } = require('../Controllers/contactForm');
 const { authToken, isAdmin } = require('../Middlewares/authToken');
 
 const router = Router();
 
 // CLIENT --
+router.post('/', authToken, postForm);
 router.post('/contact', postContactForm); // form para contactarse
-router.post('/', postForm);
 
 // ADMIN --
 router.get('/contact/:id', getAContactForm); // forms para contactarse
@@ -16,6 +16,7 @@ router.delete('/contact/:id', deleteContactForm); // forms para contactarse
 
 router.delete('/:id', authToken, isAdmin, deleteForm);
 router.get('/', authToken, isAdmin, getAllForms);
-router.get('/:id', authToken, isAdmin, getAForm);
+router.get('/:id', authToken, isAdmin, getForm);
+router.put('/:id', authToken, isAdmin, stateForm);
 
 module.exports = router;
