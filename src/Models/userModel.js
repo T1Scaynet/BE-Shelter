@@ -8,36 +8,37 @@ const userSchema = new Schema({
   },
   lastName: {
     type: String,
-    required: true
+    required: false
   },
   email: {
     type: String,
     required: true,
     unique: true
   },
-  age: {
-    type: Number,
-    required: true
+  birthdate: {
+    type: Date
   },
   password: {
-    type: String,
-    required: true
+    type: String
   },
   dni: {
-    type: Number,
-    required: true
+    type: Number
   },
   address: {
     type: String,
-    required: true
+    required: false
   },
   avatar: {
     type: String
   },
   phone: {
     type: Number,
-    required: true
+    required: false
   },
+  roles: [{
+    ref: 'Role',
+    type: Schema.Types.ObjectId
+  }],
   createAt: {
     type: Date,
     default: new Date()
