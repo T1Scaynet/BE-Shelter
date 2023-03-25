@@ -1,6 +1,8 @@
 const passport = require('passport');
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const User = require('../Models/userModel');
+const Role = require('../Models/roleModel');
+const jwt = require('jsonwebtoken');
 require('dotenv').config();
 
 passport.use(
@@ -13,15 +15,22 @@ passport.use(
     async (accessToken, refreshToken, profile, done) => {
       try {
         const email = profile.emails[0].value;
-        let user = await User.findOne({ email });
+        let user = await User.findOne({ email }).populate('roles');
         if (!user) {
           const [name, lastName] = profile.displayName.split(' ');
-          user = await User.create({
+          const role = await Role.findOne({ name: 'client' });
+          user = new User({
             name,
             lastName,
-            email
+            email,
+            roles: [role.id]
           });
+          await user.save();
+          user.msjLogin = 'Usuario creado correctamente.';
         }
+        // Le asigno un token al usuario
+        user.token = jwt.sign(user._id.toString(), process.env.PRIVATE_TOKEN);
+        user.msjLogin = user.msjLogin || 'Inicio de sesion satisfactorio.';
         return done(null, user);
       } catch (err) {
         return done(err);

@@ -5,7 +5,7 @@ const Pet = require('../Models/petModel');
 const petRequest = {};
 
 petRequest.postForm = async (req, res) => {
-  const { idPet, otherPets, garden, children, adoption, familyMembers } = req.body;
+  const { idPet, otherPets, garden, children, adoption, familyMembers, name, lastName, address, email, phone, age } = req.body;
   const idUser = req.userId;
   if (!idPet && !idUser && !otherPets && !garden && !children && !adoption && !familyMembers) {
     return res.status(400).json({
@@ -17,6 +17,12 @@ petRequest.postForm = async (req, res) => {
     const newForm = new PetRequest({
       idPet,
       idUser,
+      name,
+      lastName,
+      address,
+      email,
+      phone,
+      age,
       otherPets,
       garden,
       children,

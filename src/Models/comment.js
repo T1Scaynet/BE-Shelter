@@ -18,6 +18,10 @@ const comment = new Schema({
     max: 150,
     required: true
   },
+  image: {
+    type: String,
+    required: true
+  },
   createAt: {
     type: Date,
     default: new Date()
