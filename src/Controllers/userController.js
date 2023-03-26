@@ -55,11 +55,7 @@ user.login = async (req, res) => {
       return res.status(200).json({
         auth: true,
         token,
-        user: {
-          name: verifyUser.name,
-          password: verifyUser.email
-        },
-        msg: 'Logeado correctamente.'
+        msg: 'Inicio de sesion correctamente.'
       });
     } catch (error) {
       return res.status(400).json({
@@ -77,6 +73,7 @@ user.register = async (req, res) => {
   const { name, lastName, email, birthdate, password, dni, address, avatar, phone, roles } = req.body;
 
   if (name && email && password) {
+    console.log({ name, email, password });
     try {
       const verifyUser = await getUser({ email }).populate('roles'); // El populate es para que me relacione a los roles con id
 
@@ -107,7 +104,7 @@ user.register = async (req, res) => {
 
         if (verifyUser) {
           return res.status(400).json({
-            msg: 'El Email ya existe.'
+            msg: `El correo ${verifyUser.email} ya esta registrado`
           });
         }
 
