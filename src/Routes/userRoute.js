@@ -2,11 +2,23 @@ const { Router } = require('express');
 const { login, register, updateUser, deleteUser, getUser, profile, getAllUser } = require('../Controllers/userController');
 const { authToken, isAdmin } = require('../Middlewares/authToken');
 const { forgotPassword, resetPassword } = require('../Controllers/emailController');
+const { check } = require('express-validator');
+const { validateFields } = require('../Middlewares/validate-fields');
 const router = Router();
 
 // USER --
-router.post('/login', login);
-router.post('/register', register);
+router.post('/login', [
+  check('email', 'El correo no es válido').isEmail(),
+  check('password', 'La contraseña es incorrecta'),
+  validateFields
+], login);
+router.post('/register', [
+  check('name', 'El nombre es obligatorio').not().isEmpty(),
+  check('password', 'El password debe ser más de 6 letras').isLength({ min: 6 }),
+  check('email', 'El correo no es válido').isEmail(),
+  validateFields
+], register);
+
 // EMAIL
 router.post('/forgot', forgotPassword);
 router.post('/reset', resetPassword);
