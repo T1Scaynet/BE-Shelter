@@ -1,3 +1,5 @@
+const nodemailer = require('nodemailer');
+
 const PetRequest = require('../Models/petRequest');
 const User = require('../Models/userModel');
 const Pet = require('../Models/petModel');
@@ -12,6 +14,29 @@ petRequest.postForm = async (req, res) => {
       msg: 'Campos incompletos.'
     });
   }
+  const sendMail = async (email) => {
+    const config = {
+      host: 'smtp.gmail.com',
+      port: 587,
+      auth: {
+        user: 'fundacionhenry@gmail.com',
+        pass: 'nbonexicixldqxzc'
+      }
+    };
+
+    const mensaje = {
+      from: 'fundacionhenry@gmail.com',
+      to: email,
+      subject: 'Correo de prueba de bienvenida',
+      text: 'Envio de correo'
+    };
+
+    const transport = nodemailer.createTransport(config);
+
+    const info = await transport.sendMail(mensaje);
+
+    console.log(info);
+  };
   try {
     const state = 'In Process';
     const newForm = new PetRequest({
@@ -30,6 +55,7 @@ petRequest.postForm = async (req, res) => {
       familyMembers,
       state
     });
+    sendMail(email);
     newForm.save();
     res.status(200).json(newForm);
   } catch (error) {
