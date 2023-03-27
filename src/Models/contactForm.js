@@ -15,7 +15,11 @@ const contactForm = new Schema({
   },
   phone: {
     type: Number,
-    required: false
+    required: true
+  },
+  message: {
+    type: String,
+    required: true
   }
 });
 

@@ -1,40 +1,42 @@
 const ContactForm = require('../Models/contactForm');
+const nodemailer = require('nodemailer');
 
 const postContactForm = async (req, res) => {
-  const { name, lastName, email, phone } = req.body;
+  const { name, lastName, email, phone, message } = req.body;
   if (Object.values(req.body).length === 0) throw Error('Faltan datos');
-  
-    const sendMail = async (email) => {
-      const config = {
-        host: 'smtp.gmail.com',
-        port: 587,
-        auth: {
-          user: 'fundacionhenry@gmail.com',
-          pass: 'nbonexicixldqxzc'
-        }
-      };
 
-      const mensaje = {
-        from: 'fundacionhenry@gmail.com',
-        to: email,
-        subject: 'Correo de prueba de bienvenida',
-        text: 'Envio de correo'
-      };
+  const sendMail = async (email) => {
+    const config = {
+      host: 'smtp.gmail.com',
+      port: 587,
+      auth: {
+        user: 'fundacionhenry@gmail.com',
+        pass: 'nbonexicixldqxzc'
+      }
+    };
 
-      const transport = nodemailer.createTransport(config);
+    const mensaje = {
+      from: 'fundacionhenry@gmail.com',
+      to: email,
+      subject: 'Correo de prueba de bienvenida',
+      text: 'Envio de correo'
+    };
 
-      const info = await transport.sendMail(mensaje);
+    const transport = nodemailer.createTransport(config);
 
-      console.log(info);
+    const info = await transport.sendMail(mensaje);
+
+    console.log(info);
   };
   try {
     const newForm = new ContactForm({
       name,
       lastName,
       email,
-      phone
+      phone,
+      message
     });
-    sendMail(email)
+    sendMail(email);
     await newForm.save();
     res.status(200).json(newForm);
   } catch (error) {
