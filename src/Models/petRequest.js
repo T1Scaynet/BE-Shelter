@@ -9,6 +9,26 @@ const petRequest = new Schema({
     ref: 'User',
     type: Schema.Types.ObjectId
   },
+  name: {
+    type: String,
+    required: true
+  },
+  lastName: {
+    type: String,
+    required: true
+  },
+  address: {
+    type: String,
+    required: true
+  },
+  email: {
+    type: String,
+    required: true
+  },
+  phone: {
+    type: String,
+    required: true
+  },
   otherPets: {
     type: Boolean,
     required: true
