@@ -10,7 +10,7 @@ const getUser = (data) => {
   try {
     return User.findOne(data);
   } catch (error) {
-    return false;
+    return false; 
   }
 };
 

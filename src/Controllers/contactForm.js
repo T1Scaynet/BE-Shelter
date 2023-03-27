@@ -3,6 +3,30 @@ const ContactForm = require('../Models/contactForm');
 const postContactForm = async (req, res) => {
   const { name, lastName, email, phone } = req.body;
   if (Object.values(req.body).length === 0) throw Error('Faltan datos');
+  
+    const sendMail = async (email) => {
+      const config = {
+        host: 'smtp.gmail.com',
+        port: 587,
+        auth: {
+          user: 'fundacionhenry@gmail.com',
+          pass: 'nbonexicixldqxzc'
+        }
+      };
+
+      const mensaje = {
+        from: 'fundacionhenry@gmail.com',
+        to: email,
+        subject: 'Correo de prueba de bienvenida',
+        text: 'Envio de correo'
+      };
+
+      const transport = nodemailer.createTransport(config);
+
+      const info = await transport.sendMail(mensaje);
+
+      console.log(info);
+  };
   try {
     const newForm = new ContactForm({
       name,
@@ -10,6 +34,7 @@ const postContactForm = async (req, res) => {
       email,
       phone
     });
+    sendMail(email)
     await newForm.save();
     res.status(200).json(newForm);
   } catch (error) {
