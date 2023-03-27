@@ -28,10 +28,6 @@ const petSchema = new Schema({
     type: String,
     required: true
   },
-  image: {
-    type: String,
-    required: true
-  },
   galery: {
     type: Array,
     required: true
