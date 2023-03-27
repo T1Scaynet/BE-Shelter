@@ -2,12 +2,12 @@ const { Schema, model } = require('mongoose');
 
 const comment = new Schema({
   idPet: {
-    type: String,
-    required: true
+    ref: 'Pet',
+    type: Schema.Types.ObjectId
   },
   idUser: {
-    type: String,
-    required: true
+    ref: 'User',
+    type: Schema.Types.ObjectId
   },
   stars: {
     type: Number,
@@ -16,6 +16,10 @@ const comment = new Schema({
   comments: {
     type: String,
     max: 150,
+    required: true
+  },
+  image: {
+    type: String,
     required: true
   },
   createAt: {

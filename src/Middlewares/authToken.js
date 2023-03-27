@@ -9,7 +9,7 @@ const authToken = async (req, res, next) => {
 
     if (token) {
       const verify = jwt.verify(token, process.env.PRIVATE_TOKEN);
-      console.log(verify);
+
       req.userId = verify;
 
       const user = await User.findById(req.userId, { password: 0 });

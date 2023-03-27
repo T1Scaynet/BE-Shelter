@@ -19,15 +19,12 @@ const petSchema = new Schema({
     type: Number,
     required: true
   },
+  // En adopcion, en transito, adoptado
   state: {
     type: String,
     required: true
   },
   size: {
-    type: String,
-    required: true
-  },
-  image: {
     type: String,
     required: true
   },
@@ -64,6 +61,10 @@ const petSchema = new Schema({
   coexistenceKids: {
     type: Boolean,
     required: true
+  },
+  adoptedBy: {
+    ref: 'User',
+    type: Schema.Types.ObjectId
   },
   createAt: {
     type: Date,

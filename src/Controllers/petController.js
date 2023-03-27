@@ -1,5 +1,5 @@
-const { response } = require('express');
-const mercadopago = require('mercadopago');
+// const { response } = require('express');
+// const mercadopago = require('mercadopago');
 const Pet = require('../Models/petModel');
 
 const pet = {};
@@ -13,7 +13,7 @@ const getPet = (data) => {
 };
 
 pet.getAllPets = async (req, res) => {
-  const { type, genre, size, sort, page = 1, limit = 8, search } = req.query;
+  const { type, genre, size, state, sort, page = 1, limit = 8, search } = req.query;
 
   const options = {
     page: parseInt(page),
@@ -31,34 +31,42 @@ pet.getAllPets = async (req, res) => {
     ];
   }
 
+  if (state) {
+    filters.state = state;
+  };
+
+  if (!state) {
+    filters.state = 'Disponible';
+  };
+
   if (type) {
     filters.type = type;
-  }
+  };
 
   if (genre) {
     filters.genre = genre;
-  }
+  };
 
   if (size) {
     filters.size = size;
-  }
+  };
 
   const sortOptions = {};
 
   if (sort === 'alphabetical') {
     sortOptions.name = 1;
-  }
+  };
 
   if (sort === 'alphabetical_desc') {
     sortOptions.name = -1;
-  }
+  };
 
   try {
     const result = await Pet.paginate({ ...filters }, {
       ...options,
       sort: sortOptions
     });
-
+    console.log(result);
     if (!result.totalDocs) {
       return res.status(404).json({
         msg: 'No se encontraron mascotas.'
@@ -100,8 +108,8 @@ pet.getPet = async (req, res) => {
 };
 
 pet.createPet = async (req, res) => {
-  const { name, type, genre, age, state, size, image, galery, history, weight, vaccine, castrated, disease, disability, coexistencePets, coexistenceKids } = req.body;
-  if (name && type && genre && age && state && size && image && galery && history && weight && vaccine && castrated && coexistencePets && coexistenceKids) {
+  const { name, type, genre, age, state, size, galery, history, weight, vaccine, castrated, disease, disability, coexistencePets, coexistenceKids } = req.body;
+  if (name && type && genre && age && state && size && galery && history && weight && vaccine && castrated && coexistencePets && coexistenceKids) {
     try {
       const verifyName = await getPet({
         name
@@ -118,7 +126,6 @@ pet.createPet = async (req, res) => {
         age,
         state,
         size,
-        image,
         galery,
         history,
         weight,

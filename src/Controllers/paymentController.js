@@ -1,4 +1,5 @@
 const mercadopago = require('mercadopago');
+const Payment = require('../Models/paymentModel');
 
 const pet = {};
 
@@ -15,6 +16,7 @@ const pet = {};
 pet.createPayment = async (req, res) => {
   try {
     const products = req.body;
+    const user = req.userId;
     const preference = {
       items: [{
         id: 1,
@@ -25,16 +27,43 @@ pet.createPayment = async (req, res) => {
         category_id: 'art',
         quantity: 1,
         unit_price: products.price
+      },
+      {
+        id: 2,
+        title: products.title,
+        currency_id: 'ARS',
+        picture_url: products.image,
+        description: products.description,
+        category_id: 'art',
+        quantity: 1,
+        unit_price: products.price
+      },
+      {
+        id: 3,
+        title: products.title,
+        currency_id: 'ARS',
+        picture_url: products.image,
+        description: products.description,
+        category_id: 'art',
+        quantity: 1,
+        unit_price: products.price
       }],
       back_urls: {
-        success: 'http://localhost:3000',
-        failure: '',
+        success: process.env.PAYMENT_SUCCESS,
+        failure: process.env.PAYMENT_FAILURE,
         pending: ''
       },
       auto_return: 'approved',
       binary_mode: true
     };
     const response = await mercadopago.preferences.create(preference);
+    const newPayment = new Payment({
+      idUser: user,
+      amount: products.price,
+      title: products.title
+    });
+    await newPayment.save();
+
     res.status(200).send(response);
   } catch (error) {
     res.status(400).send({ error: error.message });
@@ -42,37 +71,37 @@ pet.createPayment = async (req, res) => {
 };
 
 // Este es por si quieres agregar mas de un producto
-//Este es para un solo producto
-pet.createPayment = async (req, res) => {
-    try {
-      const products = req.body;
-      const preference = {
-        items: [{
-          id: 1,
-          title: products.title,
-          currency_id: 'ARS',
-          picture_url: products.image,
-          description: products.description,
-          category_id: 'art',
-          quantity: 1,
-          unit_price: products.price
-        }],
-        back_urls: {
-          success: 'http://localhost:3000',
-          failure:'',
-          pending:'',
-        },
-        auto_return: 'approved',
-        binary_mode: true,
-      };
-      const response = await mercadopago.preferences.create(preference);
-      res.status(200).send(response);
-    } catch (error) {
-      res.status(400).send({ error: error.message });
-    }
-  };
+// Este es para un solo producto
+// pet.createPayment = async (req, res) => {
+//   try {
+//     const products = req.body;
+//     const preference = {
+//       items: [{
+//         id: 1,
+//         title: products.title,
+//         currency_id: 'ARS',
+//         picture_url: products.image,
+//         description: products.description,
+//         category_id: 'art',
+//         quantity: 1,
+//         unit_price: products.price
+//       }],
+//       back_urls: {
+//         success: 'http://localhost:3000',
+//         failure: '',
+//         pending: ''
+//       },
+//       auto_return: 'approved',
+//       binary_mode: true
+//     };
+//     const response = await mercadopago.preferences.create(preference);
+//     res.status(200).send(response);
+//   } catch (error) {
+//     res.status(400).send({ error: error.message });
+//   }
+// };
 
-//Este es por si quieres agregar mas de un producto
+// Este es por si quieres agregar mas de un producto
 // pet.createPayment = async (req, res) => {
 //     try {
 //       const products = req.body;
@@ -113,7 +142,7 @@ pet.createPayment = async (req, res) => {
 //           success: 'http://localhost:3000',
 //           failure:'',  // Aca agregar el link al que quieres que vaya cuando falla la compra
 //           pending:'',  // Aca es por si se quiere pagar en efectivo, queda pendiente hasta que se efectue el pago, pero todavia no vi eso
-//           pending:'',  // Aca es por si se quiere pagar en efectivo, queda pendiente hasta que se efectue el pago, pero todavia no vi eso 
+//           pending:'',  // Aca es por si se quiere pagar en efectivo, queda pendiente hasta que se efectue el pago, pero todavia no vi eso
 //         },
 //         auto_return: 'approved',
 //         binary_mode: true,

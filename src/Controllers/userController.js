@@ -10,7 +10,7 @@ const getUser = (data) => {
   try {
     return User.findOne(data);
   } catch (error) {
-    return false;
+    return false; 
   }
 };
 
@@ -55,11 +55,7 @@ user.login = async (req, res) => {
       return res.status(200).json({
         auth: true,
         token,
-        user: {
-          name: verifyUser.name,
-          password: verifyUser.email
-        },
-        msg: 'Logeado correctamente.'
+        msg: 'Inicio de sesion correctamente.'
       });
     } catch (error) {
       return res.status(400).json({
@@ -77,10 +73,11 @@ user.register = async (req, res) => {
   const { name, lastName, email, birthdate, password, dni, address, avatar, phone, roles } = req.body;
 
   if (name && email && password) {
+    console.log({ name, email, password });
     try {
       const verifyUser = await getUser({ email }).populate('roles'); // El populate es para que me relacione a los roles con id
 
-      if (verifyUser) {
+      if (verifyUser !== undefined) {
         const sendMail = async (email) => {
           const config = {
             host: 'smtp.gmail.com',
@@ -107,9 +104,10 @@ user.register = async (req, res) => {
 
         if (verifyUser) {
           return res.status(400).json({
-            msg: 'El Email ya existe.'
+            msg: `El correo ${verifyUser.email} ya esta registrado`
           });
         }
+
         const newUser = new User({
           name,
           lastName,
@@ -122,7 +120,9 @@ user.register = async (req, res) => {
           phone,
           roles
         });
+
         newUser.password = await newUser.encryptPassword(newUser.password); // Encripto la password
+
         if (roles) {
           const foundRoles = await Role.find({ name: { $in: roles } });
           newUser.roles = foundRoles.map(role => role._id);
@@ -130,6 +130,7 @@ user.register = async (req, res) => {
           const role = await Role.findOne({ name: 'client' });
           newUser.roles = [role.id];
         }
+
         const saveUser = await newUser.save();
         const token = jwt.sign({ id: saveUser._id }, process.env.PRIVATE_TOKEN);
 
@@ -140,9 +141,6 @@ user.register = async (req, res) => {
             token
           });
         }
-        newUser.password = await newUser.encryptPassword(newUser.password); // Encripto la contrasesña
-
-        // const saveUser = newUser.save();
 
         if (saveUser) {
           sendMail(email);
@@ -164,10 +162,6 @@ user.register = async (req, res) => {
         msg: 'Hubo un problema, intentalo nuevamente.'
       });
     }
-  } else {
-    return res.status(400).json({
-      msg: 'Campos incompletos.'
-    });
   }
 };
 

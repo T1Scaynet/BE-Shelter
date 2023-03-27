@@ -1,11 +1,31 @@
 const { Schema, model } = require('mongoose');
 
 const petRequest = new Schema({
+  idPet: {
+    ref: 'Pet',
+    type: Schema.Types.ObjectId
+  },
   idUser: {
+    ref: 'User',
+    type: Schema.Types.ObjectId
+  },
+  name: {
     type: String,
     required: true
   },
-  idPet: {
+  lastName: {
+    type: String,
+    required: true
+  },
+  address: {
+    type: String,
+    required: true
+  },
+  email: {
+    type: String,
+    required: true
+  },
+  phone: {
     type: String,
     required: true
   },
@@ -29,6 +49,10 @@ const petRequest = new Schema({
   familyMembers: {
     type: Number,
     required: true
+  },
+  // Puede tener 3 estados: Aprobado, Desaprobado y en proceso
+  state: {
+    type: String
   },
   createAt: {
     type: Date,

@@ -21,15 +21,15 @@ const sendPasswordResetEmail = async (email, resetToken) => {
     port: 587,
     auth: {
       user: 'fundacionhenry@gmail.com',
-      pass: 'nbonexicixldqxzc',
-    },
+      pass: 'nbonexicixldqxzc'
+    }
   });
 
   const message = {
     from: 'fundacionhenry@gmail.com',
     to: email,
     subject: 'Recuperación de contraseña',
-    text: `Haz clic en este enlace para restablecer tu contraseña: http://localhost:3000/reset/${resetToken}`,
+    text: `Haz clic en este enlace para restablecer tu contraseña: http://localhost:3000/reset/${resetToken}`
   };
 
   const info = await transporter.sendMail(message);
@@ -79,7 +79,7 @@ emailController.resetPassword = async (req, res) => {
     // Encontrar el usuario en la base de datos
     const user = await User.findOne({
       resetPasswordToken: resetToken,
-      resetPasswordExpires: { $gt: Date.now() },
+      resetPasswordExpires: { $gt: Date.now() }
     });
 
     if (!user) {
@@ -100,9 +100,6 @@ emailController.resetPassword = async (req, res) => {
 };
 
 module.exports = emailController;
-
-
-
 
 // const User = require('../Models/userModel');
 // const nodemailer = require('nodemailer');
@@ -172,10 +169,7 @@ module.exports = emailController;
 
 // module.exports = User
 
-
-
-
-//ESTA ES LA FUNCION QUE FUNCIONA PARA MANDAR MAILS
+// ESTA ES LA FUNCION QUE FUNCIONA PARA MANDAR MAILS
 // const nodemailer = require('nodemailer')
 
 // const sendMail = async() => {
