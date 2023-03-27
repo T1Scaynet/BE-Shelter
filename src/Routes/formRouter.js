@@ -2,12 +2,21 @@ const { Router } = require('express');
 const { postForm, deleteForm, getAllForms, getForm, stateForm } = require('../Controllers/formController');
 const { postContactForm, getAllContactForms, getAContactForm, deleteContactForm } = require('../Controllers/contactForm');
 const { authToken, isAdmin } = require('../Middlewares/authToken');
+const { validateFields } = require('../Middlewares/validate-fields');
+const { check } = require('express-validator');
 
 const router = Router();
 
 // CLIENT --
 router.post('/', authToken, postForm);
-router.post('/contact', postContactForm); // form para contactarse
+router.post('/contact', [
+  check('name', 'El nombre es obligatorio').not().isEmpty(),
+  check('lastName', 'El apellido es obligatorio').not().isEmpty(),
+  check('email', 'El correo no es válido').isEmail(),
+  check('lastName', 'El telefono es obligatorio').not().isEmpty(),
+  check('lastName', 'Debe mandar algun mensaje').not().isEmpty(),
+  validateFields
+], postContactForm); // form para contactarse
 
 // ADMIN --
 router.get('/contact/:id', getAContactForm); // forms para contactarse
