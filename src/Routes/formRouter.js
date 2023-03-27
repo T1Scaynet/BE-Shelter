@@ -8,13 +8,22 @@ const { check } = require('express-validator');
 const router = Router();
 
 // CLIENT --
-router.post('/', authToken, postForm);
+router.post('/', [
+  check('name', 'El nombre es obligatorio').not().isEmpty(),
+  check('lastName', 'El apellido es obligatorio').not().isEmpty(),
+  check('email', 'El correo no es válido').isEmail(),
+  check('phone', 'El telefono es obligatorio').not().isEmpty(),
+  check('address', 'La direccion es obligatoria').not().isEmpty(),
+  validateFields,
+  authToken
+], postForm);
+
 router.post('/contact', [
   check('name', 'El nombre es obligatorio').not().isEmpty(),
   check('lastName', 'El apellido es obligatorio').not().isEmpty(),
   check('email', 'El correo no es válido').isEmail(),
-  check('lastName', 'El telefono es obligatorio').not().isEmpty(),
-  check('lastName', 'Debe mandar algun mensaje').not().isEmpty(),
+  check('phone', 'El telefono es obligatorio').not().isEmpty(),
+  check('message', 'Debe mandar algun mensaje').not().isEmpty(),
   validateFields
 ], postContactForm); // form para contactarse
 

@@ -18,8 +18,14 @@ const postContactForm = async (req, res) => {
     const mensaje = {
       from: 'fundacionhenry@gmail.com',
       to: email,
-      subject: 'Correo de prueba de bienvenida',
-      text: 'Envio de correo'
+      subject: 'Correo de comprobacion de formulario de contacto recibido',
+      text: `Se envio el formulario de contacto con los siguientes datos:
+      nombre: ${name} 
+      apellido: ${lastName} 
+      email: ${email}
+      telefono: ${phone} 
+      mensaje: ${message}
+      Nos estaremos comunicando fundacionhenry@gmail.com`
     };
 
     const transport = nodemailer.createTransport(config);
