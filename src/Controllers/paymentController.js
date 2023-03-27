@@ -27,9 +27,29 @@ pet.createPayment = async (req, res) => {
         category_id: 'art',
         quantity: 1,
         unit_price: products.price
-      }],
+      },
+        {
+          id: 2,
+          title: products.title,
+          currency_id: 'ARS',
+          picture_url: products.image,
+          description: products.description,
+          category_id: 'art',
+          quantity: 1,
+          unit_price: products.price
+        },
+        {
+          id: 3,
+          title: products.title,
+          currency_id: 'ARS',
+          picture_url: products.image,
+          description: products.description,
+          category_id: 'art',
+          quantity: 1,
+          unit_price: products.price
+        }],
       back_urls: {
-        success: 'http://localhost:3000',
+        success: '/',
         failure: '',
         pending: ''
       },
