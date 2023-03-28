@@ -3,51 +3,26 @@ const Payment = require('../Models/paymentModel');
 
 const pet = {};
 
-// http://localhost:3001/payment esta es la ruta
-// Este es un json de ejemplo de como agregar productos para probrar en el postman
-// {
-//     "title":"Castracion",
-//     "category":"Donacion",
-//     "description": "Esta es una donacion para una castracion de un perrito",
-//     "price": 50000
-//   }
+// // http://localhost:3001/payment esta es la ruta
 
-// Este es para un solo producto
 pet.createPayment = async (req, res) => {
   try {
-    const products = req.body;
+    const { products } = req.body;
     const user = req.userId;
+    const items = products.map((product, index) => ({
+      id: index + 1,
+      title: product.title,
+      currency_id: 'ARS',
+      picture_url: product.image,
+      description: product.description,
+      category_id: 'art',
+      quantity: 1,
+      unit_price: product.price
+      
+    }));
+    
     const preference = {
-      items: [{
-        id: 1,
-        title: products.title,
-        currency_id: 'ARS',
-        picture_url: products.image,
-        description: products.description,
-        category_id: 'art',
-        quantity: 1,
-        unit_price: products.price
-      },
-      {
-        id: 2,
-        title: products.title,
-        currency_id: 'ARS',
-        picture_url: products.image,
-        description: products.description,
-        category_id: 'art',
-        quantity: 1,
-        unit_price: products.price
-      },
-      {
-        id: 3,
-        title: products.title,
-        currency_id: 'ARS',
-        picture_url: products.image,
-        description: products.description,
-        category_id: 'art',
-        quantity: 1,
-        unit_price: products.price
-      }],
+      items,
       back_urls: {
         success: process.env.PAYMENT_SUCCESS,
         failure: process.env.PAYMENT_FAILURE,
@@ -58,9 +33,9 @@ pet.createPayment = async (req, res) => {
     };
     const response = await mercadopago.preferences.create(preference);
     const newPayment = new Payment({
-      idUser: user,
-      amount: products.price,
-      title: products.title
+      id: user,
+      amount: products.reduce((total, product) => total + product.price, 0),
+      title: products.map(product => product.title).join(', ')
     });
     await newPayment.save();
 
@@ -69,89 +44,5 @@ pet.createPayment = async (req, res) => {
     res.status(400).send({ error: error.message });
   }
 };
-
-// Este es por si quieres agregar mas de un producto
-// Este es para un solo producto
-// pet.createPayment = async (req, res) => {
-//   try {
-//     const products = req.body;
-//     const preference = {
-//       items: [{
-//         id: 1,
-//         title: products.title,
-//         currency_id: 'ARS',
-//         picture_url: products.image,
-//         description: products.description,
-//         category_id: 'art',
-//         quantity: 1,
-//         unit_price: products.price
-//       }],
-//       back_urls: {
-//         success: 'http://localhost:3000',
-//         failure: '',
-//         pending: ''
-//       },
-//       auto_return: 'approved',
-//       binary_mode: true
-//     };
-//     const response = await mercadopago.preferences.create(preference);
-//     res.status(200).send(response);
-//   } catch (error) {
-//     res.status(400).send({ error: error.message });
-//   }
-// };
-
-// Este es por si quieres agregar mas de un producto
-// pet.createPayment = async (req, res) => {
-//     try {
-//       const products = req.body;
-//       const preference = {
-//         items: [
-//           {
-//             id: 1,
-//             title: products[0].title,
-//             currency_id: 'ARS',
-//             picture_url: products[0].image,
-//             description: products[0].description,
-//             category_id: 'art',
-//             quantity: 1,
-//             unit_price: products[0].price
-//           },
-//           {
-//             id: 2,
-//             title: products[1].title,
-//             currency_id: 'ARS',
-//             picture_url: products[1].image,
-//             description: products[1].description,
-//             category_id: 'art',
-//             quantity: 1,
-//             unit_price: products[1].price
-//           },
-//           {
-//             id: 3,
-//             title: products[2].title,
-//             currency_id: 'ARS',
-//             picture_url: products[2].image,
-//             description: products[2].description,
-//             category_id: 'art',
-//             quantity: 1,
-//             unit_price: products[2].price
-//         }
-//         ],
-//         back_urls: {
-//           success: 'http://localhost:3000',
-//           failure:'',  // Aca agregar el link al que quieres que vaya cuando falla la compra
-//           pending:'',  // Aca es por si se quiere pagar en efectivo, queda pendiente hasta que se efectue el pago, pero todavia no vi eso
-//           pending:'',  // Aca es por si se quiere pagar en efectivo, queda pendiente hasta que se efectue el pago, pero todavia no vi eso
-//         },
-//         auto_return: 'approved',
-//         binary_mode: true,
-//       };
-//       const response = await mercadopago.preferences.create(preference);
-//       res.status(200).send(response);
-//     } catch (error) {
-//       res.status(400).send({ error: error.message });
-//     }
-//   };
 
 module.exports = pet;
