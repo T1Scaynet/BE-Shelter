@@ -1,5 +1,5 @@
 const { Router } = require('express');
-const { login, register, updateUser, deleteUser, getUser, profile, getAllUser } = require('../Controllers/userController');
+const { login, register, updateUser, deactivateUser, getUser, profile, getAllUser, createUser, updateActive, deleteUserByAdmin } = require('../Controllers/userController');
 const { authToken, isAdmin } = require('../Middlewares/authToken');
 const { forgotPassword, resetPassword } = require('../Controllers/emailController');
 const { check } = require('express-validator');
@@ -19,17 +19,20 @@ router.post('/register', [
   validateFields
 ], register);
 
-// EMAIL
+// EMAIL --
 router.post('/forgot', forgotPassword);
 router.post('/reset', resetPassword);
 
 // CLIENT --
-router.put('/update/:id', updateUser);
-router.delete('/delete/:id', deleteUser);
+router.put('/update', authToken, updateUser);
+router.put('/deactivate', authToken, deactivateUser);
 router.get('/profile', authToken, profile);
 
 // ADMIN --
 router.get('/:id', authToken, isAdmin, getUser);
 router.get('/', authToken, isAdmin, getAllUser);
+router.post('/create', authToken, isAdmin, createUser);
+router.put('/updateActive/:id', authToken, isAdmin, updateActive);
+router.delete('/deleteUser/:id', authToken, isAdmin, deleteUserByAdmin);
 
 module.exports = router;
