@@ -91,8 +91,9 @@ user.register = async (req, res) => {
           const mensaje = {
             from: 'fundacionhenry@gmail.com',
             to: email,
-            subject: 'Correo de prueba de bienvenida',
-            text: 'Envio de correo'
+            subject: 'Correo de bienvenida',
+            text: `El usuario con nombre: ${name} y email: ${email} se registro correctamente
+            Cualquier duda comuniquese al email: fundacionhenry@gmail.com`
           };
 
           const transport = nodemailer.createTransport(config);
