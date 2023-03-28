@@ -73,14 +73,11 @@ emailController.forgotPassword = async (req, res) => {
 };
 
 emailController.resetPassword = async (req, res) => {
-  const { resetToken, newPassword } = req.body;
+  const { newPassword, email } = req.body;
 
   try {
     // Encontrar el usuario en la base de datos
-    const user = await User.findOne({
-      resetPasswordToken: resetToken,
-      resetPasswordExpires: { $gt: Date.now() }
-    });
+    const user = await User.findOne({ email });
 
     if (!user) {
       return res.status(400).json({ message: 'Token de recuperación de contraseña inválido o expirado' });
@@ -88,8 +85,7 @@ emailController.resetPassword = async (req, res) => {
 
     // Actualizar la contraseña del usuario
     user.password = newPassword;
-    user.resetPasswordToken = null;
-    user.resetPasswordExpires = null;
+    user.password = await user.encryptPassword(user.password); // Encripto la password
     await user.save();
 
     return res.status(200).json({ message: 'Contraseña actualizada correctamente' });
