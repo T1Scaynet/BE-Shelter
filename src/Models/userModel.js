@@ -43,6 +43,9 @@ const userSchema = new Schema({
     ref: 'Pet',
     type: Schema.Types.ObjectId
   }],
+  active: {
+    type: Boolean
+  },
   createAt: {
     type: Date,
     default: new Date()

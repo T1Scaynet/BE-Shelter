@@ -19,11 +19,13 @@ passport.use(
         if (!user) {
           const [name, lastName] = profile.displayName.split(' ');
           const role = await Role.findOne({ name: 'client' });
+          const active = true;
           user = new User({
             name,
             lastName,
             email,
-            roles: [role.id]
+            roles: [role.id],
+            active
           });
           await user.save();
           user.msjLogin = 'Usuario creado correctamente.';
