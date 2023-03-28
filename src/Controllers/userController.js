@@ -10,7 +10,7 @@ const getUser = (data) => {
   try {
     return User.findOne(data);
   } catch (error) {
-    return false; 
+    return false;
   }
 };
 
@@ -131,26 +131,15 @@ user.register = async (req, res) => {
           const role = await Role.findOne({ name: 'client' });
           newUser.roles = [role.id];
         }
-
         const saveUser = await newUser.save();
         const token = jwt.sign({ id: saveUser._id }, process.env.PRIVATE_TOKEN);
 
         if (token) {
+          sendMail(email);
           return res.status(200).json({
             msg: 'Usuario creado correctamente.',
             auth: true,
             token
-          });
-        }
-
-        if (saveUser) {
-          sendMail(email);
-          return res.status(200).json({
-            user: {
-              name: newUser.name,
-              email: newUser.email
-            },
-            msg: 'Usuario creado correctamente.'
           });
         } else {
           return res.status(400).json({
