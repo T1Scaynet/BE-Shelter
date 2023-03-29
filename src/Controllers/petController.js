@@ -66,7 +66,7 @@ pet.getAllPets = async (req, res) => {
       ...options,
       sort: sortOptions
     });
-    console.log(result);
+    // console.log(result);
     if (!result.totalDocs) {
       return res.status(404).json({
         msg: 'No se encontraron mascotas.'
@@ -108,6 +108,7 @@ pet.getPet = async (req, res) => {
 };
 
 pet.createPet = async (req, res) => {
+  console.log(req.body);
   const { name, type, genre, age, state, size, galery, history, weight, vaccine, castrated, disease, disability, coexistencePets, coexistenceKids } = req.body;
   if (name && type && genre && age && state && size && galery && history && weight && vaccine && castrated && coexistencePets && coexistenceKids) {
     try {
@@ -210,7 +211,7 @@ pet.updatePet = async (req, res) => {
 
 pet.deletePet = async (req, res) => {
   const pet = await Pet.findById(req.params.id);
-  console.log(pet);
+  // console.log(pet);
   if (pet) {
     try {
       const deletePet = await Pet.findByIdAndDelete(req.params.id);

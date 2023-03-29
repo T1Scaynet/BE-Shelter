@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 const { Router } = require('express');
 const { authToken, isModerator } = require('../Middlewares/authToken');
 const { getAllPets, createPet, updatePet, deletePet, getPet, getFourPet, createPayment } = require('../Controllers/petController');
@@ -16,7 +17,7 @@ router.get('/:id', getPet);
 router.post('/create', [
   check('name', 'El nombre es obligatorio').not().isEmpty(),
   check('type', 'El tipo es obligatorio').not().isEmpty(),
-  check('genre', 'El genero no es válido').isEmail(),
+  check('genre', 'El genero no es válido').not().isEmpty(),
   check('age', 'La edad es obligatoria').not().isEmpty(),
   check('state', 'El estado es obligatorio').not().isEmpty(),
   check('size', 'El tamaño es obligatorio').not().isEmpty(),
