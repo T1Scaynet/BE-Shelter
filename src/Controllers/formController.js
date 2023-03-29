@@ -103,7 +103,7 @@ petRequest.stateForm = async (req, res) => {
   try {
     await PetRequest.findByIdAndUpdate(req.params.id, state);
     const request = PetRequest.findById(req.params.id);
-    if (state === 'approved') {
+    if (state === 'Aprobado') {
       await User.findByIdAndUpdate(request.idUser, { adoptions: request.idPet });
       await Pet.findByIdAndUpdate(request.idUser, { adoptedBy: request.idUser });
     }
