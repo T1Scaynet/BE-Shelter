@@ -44,7 +44,7 @@ petRequest.postForm = async (req, res) => {
     console.log(info);
   };
   try {
-    const state = 'In Process';
+    const state = 'En proceso';
     const newForm = new PetRequest({
       idPet,
       idUser,
