@@ -9,6 +9,7 @@ payment.createPayment = async (req, res) => {
   try {
     const { products } = req.body;
     const user = req.userId;
+    console.log(products)
     const items = products.map((product, index) => ({
       id: index + 1,
       title: product.title,
@@ -16,7 +17,7 @@ payment.createPayment = async (req, res) => {
       picture_url: product.image,
       description: product.description,
       category_id: 'art',
-      quantity: 1,
+      quantity: product.cartQuantity,
       unit_price: product.price
 
     }));
