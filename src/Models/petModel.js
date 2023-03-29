@@ -22,6 +22,7 @@ const petSchema = new Schema({
   // En adopcion, en transito, adoptado
   state: {
     type: String,
+    enum: ['Disponible', 'Adoptado'],
     required: true
   },
   size: {
