@@ -67,6 +67,10 @@ const petSchema = new Schema({
     ref: 'User',
     type: Schema.Types.ObjectId
   },
+  deleted: {
+    type: Boolean,
+    default: false
+  },
   createAt: {
     type: Date,
     default: new Date()
