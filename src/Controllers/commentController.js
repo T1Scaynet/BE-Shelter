@@ -5,7 +5,6 @@ const postComment = (req = request, res = response) => {
   const idUser = req.userId;
   const { comments } = req.body;
 
-  console.log(idUser);
   if (!idUser) throw Error('Faltan datos');
   try {
     const newComment = new Comment({
