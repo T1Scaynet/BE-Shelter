@@ -88,47 +88,24 @@ pet.getAllPets = async (req, res) => {
   }
 };
 
-// pet.getPet = async (req, res) => {
-//   try {
-//     const pet = await Pet.findById(req.params.id);
-//     if (!pet) {
-//       return res.status(404).json({
-//         msg: 'No se encontro la mascota.'
-//       });
-//     } else {
-//       return res.status(200).json({
-//         pet
-//       });
-//     }
-//   } catch {
-//     return res.status(400).json({
-//       msg: 'Ocurrio un problema. intentalo nuevamente.'
-//     });
-//   }
-// };
-
 pet.getPet = async (req, res) => {
   try {
-    const pet = await Pet.findOneAndUpdate(
-      { _id: req.params.id, state: 'Disponible' },
-      { deleted: true }
-    );
+    const pet = await Pet.findById(req.params.id);
     if (!pet) {
       return res.status(404).json({
-        msg: 'No se encontró la mascota disponible.'
+        msg: 'No se encontro la mascota.'
       });
     } else {
       return res.status(200).json({
-        msg: 'Mascota adoptada exitosamente.'
+        pet
       });
     }
   } catch {
     return res.status(400).json({
-      msg: 'Ocurrió un problema. Intenta nuevamente.'
+      msg: 'Ocurrio un problema. intentalo nuevamente.'
     });
   }
 };
-
 
 pet.createPet = async (req, res) => {
   console.log(req.body);
