@@ -26,7 +26,7 @@ const petRequest = new Schema({
     required: true
   },
   phone: {
-    type: String,
+    type: Number,
     required: true
   },
   otherPets: {
