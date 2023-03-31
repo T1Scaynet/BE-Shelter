@@ -34,7 +34,7 @@ petRequest.postForm = async (req, res) => {
       email: ${email}
       telefono: ${phone} 
       direccion: ${address}
-      Nos estaremos comunicando fundacionhenry@gmail.com`
+      Nos estaremos comunicando, fundacionhenry@gmail.com`
     };
 
     const transport = nodemailer.createTransport(config);
@@ -65,7 +65,9 @@ petRequest.postForm = async (req, res) => {
     newForm.save();
     res.status(200).json(newForm);
   } catch (error) {
-    res.status(400).send(error.message);
+    res.status(400).json({
+      msg: 'Ocurrio un problema, intentalo nuevamente.'
+    });
   }
 };
 
@@ -74,17 +76,29 @@ petRequest.deleteForm = async (req, res) => {
     const deleted = await PetRequest.findByIdAndDelete(req.params.id);
     res.status(200).send(`el formulario con el id: ${deleted.id}, fue eliminado correctamente`);
   } catch (error) {
-    res.status(400).send(error.message);
+    res.status(400).json({
+      msg: 'Ocurrio un problema, intentalo nuevamente.'
+    });
   }
 };
 
 petRequest.getAllForms = async (req, res) => {
   try {
-    const allForms = await PetRequest.find({});
-    if (!allForms.length) throw Error('No hay formularios disponibles');
-    res.status(200).json(allForms);
+    const options = {
+      page: 1,
+      limit: 8
+    };
+    const paginateForm = await PetRequest.paginate({}, options);
+    return res.status(200).json({
+      totalPages: paginateForm.totalPages,
+      currentPage: paginateForm.page,
+      totalItems: paginateForm.totalDocs,
+      forms: paginateForm.docs
+    });
   } catch (error) {
-    res.status(400).send(error.message);
+    res.status(400).json({
+      msg: 'Ocurrio un problema, intentalo nuevamente.'
+    });
   }
 };
 
@@ -94,7 +108,9 @@ petRequest.getForm = async (req, res) => {
     if (!form) throw Error(`El formulario con el id: ${req.params.id} no existe`);
     res.status(200).json(form);
   } catch (error) {
-    res.status(400).send(error.message);
+    res.status(400).json({
+      msg: 'Ocurrio un problema, intentalo nuevamente.'
+    });
   }
 };
 

@@ -32,7 +32,6 @@ const isModerator = async (req, res, next) => {
   try {
     const user = await User.findById(req.userId);
     const roles = await Role.find({ _id: { $in: user.roles } });
-    console.log(user);
     for (let i = 0; i < roles.length; i++) {
       if (roles[i].name === 'moderator') {
         next();
@@ -53,7 +52,6 @@ const isAdmin = async (req, res, next) => {
   try {
     const user = await User.findById(req.userId);
     const roles = await Role.find({ _id: { $in: user.roles } });
-    console.log(roles[0]);
     for (let i = 0; i < roles.length; i++) {
       if (roles[i].name === 'admin') {
         next();
