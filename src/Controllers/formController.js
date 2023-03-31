@@ -99,20 +99,27 @@ petRequest.getForm = async (req, res) => {
 };
 
 petRequest.stateForm = async (req, res) => {
-  const { state } = req.body;
-  try {
-    await PetRequest.findByIdAndUpdate(req.params.id, state);
-    const request = PetRequest.findById(req.params.id);
-    if (state === 'Aprobado') {
-      await User.findByIdAndUpdate(request.idUser, { adoptions: request.idPet });
-      await Pet.findByIdAndUpdate(request.idUser, { adoptedBy: request.idUser });
+  const state = req.body;
+  if (state) {
+    try {
+      await PetRequest.findByIdAndUpdate(req.params.id, state);
+      const request = await PetRequest.findById(req.params.id);
+
+      if (state.state === 'Aprobado') {
+        await User.findByIdAndUpdate(request.idUser, { adoptions: request.idPet });
+        await Pet.findByIdAndUpdate(request.idPet, { adoptedBy: request.idUser, state: 'Adoptado' });
+      };
+      return res.status(200).json({
+        msg: 'Estado actualizado correctamente.'
+      });
+    } catch (error) {
+      return res.status(400).json({
+        msg: 'Ocurrio un problema, intentalo nuevamente.'
+      });
     }
-    return res.status(200).json({
-      msg: 'Estado actualizado correctamente.'
-    });
-  } catch (error) {
+  } else {
     return res.status(400).json({
-      msg: 'Ocurrio un problema, intentalo nuevamente.'
+      msg: 'Campos incompletos, se necesita un state.'
     });
   }
 };
