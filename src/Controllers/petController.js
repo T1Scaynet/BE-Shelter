@@ -55,7 +55,7 @@ pet.getAllPets = async (req, res) => {
 
   if (sort === 'alphabetical') {
     sortOptions.name = 1;
-  };
+  }; 
 
   if (sort === 'alphabetical_desc') {
     sortOptions.name = -1;
@@ -66,7 +66,7 @@ pet.getAllPets = async (req, res) => {
       ...options,
       sort: sortOptions
     });
-    // console.log(result);
+    console.log(result);
     if (!result.totalDocs) {
       return res.status(404).json({
         msg: 'No se encontraron mascotas.'
