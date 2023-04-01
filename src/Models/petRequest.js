@@ -1,4 +1,5 @@
 const { Schema, model } = require('mongoose');
+const mongoosePaginate = require('mongoose-paginate-v2');
 
 const petRequest = new Schema({
   idPet: {
@@ -61,5 +62,7 @@ const petRequest = new Schema({
     default: new Date()
   }
 });
+
+petRequest.plugin(mongoosePaginate);
 
 module.exports = model('PetRequest', petRequest);
