@@ -9,7 +9,7 @@ payment.createPayment = async (req, res) => {
   try {
     const { products } = req.body;
     const user = req.userId;
-    console.log(products)
+
     const items = products.map((product, index) => ({
       id: index + 1,
       title: product.title,
@@ -33,10 +33,13 @@ payment.createPayment = async (req, res) => {
       binary_mode: true
     };
     const response = await mercadopago.preferences.create(preference);
+    console.log(response.body.auto_return);
     const newPayment = new Payment({
       id: user,
       amount: products.reduce((total, product) => total + product.price, 0),
-      title: products.map(product => product.title).join(', ')
+      title: products.map(product => product.title).join(', '),
+      status: response.body.auto_return,
+      url: response.body.init_point
     });
     await newPayment.save();
 

@@ -13,6 +13,14 @@ const paymentSchema = new Schema({
     type: String,
     require: true
   },
+  status: {
+    type: String,
+    require: true
+  },
+  url: {
+    type: String,
+    require: true
+  },
   createAt: {
     type: Date,
     default: new Date()
