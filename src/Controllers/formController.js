@@ -83,17 +83,48 @@ petRequest.deleteForm = async (req, res) => {
 };
 
 petRequest.getAllForms = async (req, res) => {
+  const { state, adoption, sort, search, page = 1, limit = 8 } = req.query;
+  const options = {
+    page: parseInt(page),
+    limit: parseInt(limit)
+  };
+
+  const filters = {};
+
+  if (search) {
+    filters.$or = [{ name: { $regex: search, $options: 'i' } }];
+  }
+
+  if (state) {
+    filters.state = state;
+  };
+
+  if (adoption) {
+    filters.adoption = adoption;
+  };
+
+  const sortOptions = {};
+
+  if (sort === 'old') {
+    sortOptions.createAt = 1;
+  };
+
+  if (sort === 'recent') {
+    sortOptions.createAt = -1;
+  };
+
   try {
-    const { page = 1, limit = 8 } = req.query;
-    const options = {
-      page: parseInt(page),
-      limit: parseInt(limit)
-    };
-    const paginateForm = await PetRequest.paginate({}, options);
+    const paginateForm = await PetRequest.paginate({ ...filters }, {
+      ...options,
+      sort: sortOptions
+    });
+
     return res.status(200).json({
       totalPages: paginateForm.totalPages,
       currentPage: paginateForm.page,
       totalItems: paginateForm.totalDocs,
+      search,
+      filters,
       forms: paginateForm.docs
     });
   } catch (error) {
