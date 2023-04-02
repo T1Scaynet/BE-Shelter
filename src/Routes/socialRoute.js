@@ -17,7 +17,7 @@ router.get(
   }),
   (req, res) => {
     // Si la autenticación es exitosa, redirige al usuario a la página de inicio de tu aplicación
-    // res.redirect('http://localhost:5173/');
+    res.redirect(`http://localhost:5173/?sesion=${req.user.token}`);
     return res.status(200).json({
       msg: req.user.msjLogin,
       auth: true,
