@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 const { Router } = require('express');
 const { authToken, isModerator } = require('../Middlewares/authToken');
-const { getAllPets, createPet, updatePet, deletePet, getPet, getFourPet, createPayment } = require('../Controllers/petController');
+const { getAllPets, createPet, updatePet, deletePet, getPet, getFourPet, getAllModerator } = require('../Controllers/petController');
 const { validateFields } = require('../Middlewares/validate-fields');
 const { check } = require('express-validator');
 const router = Router();
@@ -31,5 +31,6 @@ router.post('/create', [
 ], createPet);
 router.put('/update/:id', authToken, isModerator, updatePet);
 router.delete('/delete/:id', authToken, isModerator, deletePet);
+router.get('/admin/getPets', authToken, isModerator, getAllModerator);
 
 module.exports = router;
