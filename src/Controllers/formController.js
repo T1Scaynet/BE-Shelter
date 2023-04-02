@@ -84,9 +84,10 @@ petRequest.deleteForm = async (req, res) => {
 
 petRequest.getAllForms = async (req, res) => {
   try {
+    const { page = 1, limit = 8 } = req.query;
     const options = {
-      page: 1,
-      limit: 8
+      page: parseInt(page),
+      limit: parseInt(limit)
     };
     const paginateForm = await PetRequest.paginate({}, options);
     return res.status(200).json({
