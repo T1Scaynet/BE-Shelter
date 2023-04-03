@@ -3,13 +3,17 @@ const Comment = require('../Models/comment');
 
 const postComment = (req = request, res = response) => {
   const idUser = req.userId;
-  const { comments } = req.body;
+  const { idPet, stars, comments, image } = req.body;
 
-  if (!idUser) throw Error('Faltan datos');
+  console.log(idUser);
+  if (!idPet || !idUser || !stars) throw Error('Faltan datos');
   try {
     const newComment = new Comment({
+      idPet,
       idUser,
-      comments
+      stars,
+      comments,
+      image
     });
     newComment.save();
     res.status(200).json(newComment);
