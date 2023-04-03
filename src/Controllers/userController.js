@@ -252,80 +252,73 @@ user.getUser = async (req, res) => {
   }
 };
 
-// user.getAllUser = async (req, res) => {
-//   try {
-//     const allUsers = await User.find();
+user.getAllUser = async (req, res) => {
+  try {
+    const users = await User.find();
 
-//     return res.status(200).json({
-//       allUsers
-//     });
-//   } catch (error) {
-//     return res.state(400).json({
-//       msg: 'Ocurrio un problema, intentalo nuevamente.'
-//     });
-//   }
-// };
+    return res.status(200).json({
+      users
+    });
+  } catch (error) {
+    return res.state(400).json({
+      msg: 'Ocurrio un problema, intentalo nuevamente.'
+    });
+  }
+};
 
 
 
 //Este es el maldito codigo que funciona 
-user.getAllUser = async (req, res) => {
-  try {
-    const { name, email, roles, sortBy, search, page, limit } = req.query;
+// user.getAllUser = async (req, res) => {
+//   try {
+//     const { name, email, roles, sortBy, search } = req.query;
 
-    const filter = {};
+//     const filter = {};
 
-    if (search) {
-      filter.$or = [
-        { name: { $regex: search, $options: 'i' } },
-        { email: { $regex: search, $options: 'i' } },
-      ];
-    }
+//     if (search) {
+//       filter.$or = [
+//         { name: { $regex: search, $options: 'i' } },
+//         { email: { $regex: search, $options: 'i' } },
+//       ];
+//     }
 
-    if (name) {
-      filter.name = { $regex: name, $options: 'i' };
-    }
+//     if (name) {
+//       filter.name = { $regex: name, $options: 'i' };
+//     }
 
-    if (email) {
-      filter.email = { $regex: email, $options: 'i' };
-    }
+//     if (email) {
+//       filter.email = { $regex: email, $options: 'i' };
+//     }
 
-    if (roles) {
-      filter.roles = { $in: roles };
-    }
+//     if (roles) {
+//       filter.roles = { $in: roles };
+//     }
 
-    const sortOptions = {};
+//     const sortOptions = {};
 
-    if (sortBy === 'asc') {
-      sortOptions.name = 1;
-    } else if (sortBy === 'desc') {
-      sortOptions.name = -1;
-    }
+//     if (sortBy === 'asc') {
+//       sortOptions.name = 1;
+//     } else if (sortBy === 'desc') {
+//       sortOptions.name = -1;
+//     }
 
-    const pageNumber = parseInt(page) || 1;
-    const resultsPerPage = parseInt(limit) || 8;
+//     const options = {
+//       sort: sortOptions,
+//     };
 
-    const options = {
-      page: pageNumber,
-      limit: resultsPerPage,
-      sort: sortOptions,
-    };
+//     const { docs, totalDocs, totalPages } = await User.paginate(filter, options);
 
-    const { docs, totalDocs, totalPages } = await User.paginate(filter, options);
-
-    return res.status(200).json({
-      users: docs,
-      currentPage: pageNumber,
-      totalPages: totalPages,
-      totalUsers: totalDocs,
-    });
-  } catch (error) {
-    return res.status(400).json({
-      msg: 'Ocurrio un problema, intentalo nuevamente.',
-      error: error.message,
-    });
-  }
-};
+//     return res.status(200).json({
+//       users: docs,
+//       totalUsers: totalDocs,
+//     });
+//   } catch (error) {
+//     return res.status(400).json({
+//       msg: 'Ocurrio un problema, intentalo nuevamente.',
+//       error: error.message,
+//     });
+//   }
+// };
 
 
 

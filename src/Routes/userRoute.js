@@ -30,7 +30,7 @@ router.get('/profile', authToken, profile);
 
 // ADMIN --
 router.get('/:id', authToken, isAdmin, getUser);
-router.get('/', authToken, isAdmin, getAllUser);
+router.get('/', getAllUser);
 router.post('/create', authToken, isAdmin, createUser);
 router.put('/updateActive/:id', authToken, isAdmin, updateActive);
 router.delete('/deleteUser/:id', authToken, isAdmin, deleteUserByAdmin);
