@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 const { Router } = require('express');
-const { authToken, isModerator } = require('../Middlewares/authToken');
+const { authToken, isModerator, isAdmin } = require('../Middlewares/authToken');
 const { getAllPets, createPet, updatePet, deletePet, getPet, getFourPet, getAllModerator } = require('../Controllers/petController');
 const { validateFields } = require('../Middlewares/validate-fields');
 const { check } = require('express-validator');
@@ -27,10 +27,10 @@ router.post('/create', [
   check('disability', 'El campo discapacidad es obligatorio').not().isEmpty(),
   validateFields,
   authToken,
-  isModerator
+  isAdmin || isModerator
 ], createPet);
-router.put('/update/:id', authToken, isModerator, updatePet);
-router.delete('/delete/:id', authToken, isModerator, deletePet);
-router.get('/admin/getPets', authToken, isModerator, getAllModerator);
+router.put('/update/:id', authToken, isAdmin || isModerator, updatePet);
+router.delete('/delete/:id', authToken, isAdmin || isModerator, deletePet);
+router.get('/admin/getPets', authToken, isAdmin || isModerator, getAllModerator);
 
 module.exports = router;
