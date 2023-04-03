@@ -51,8 +51,8 @@ payment.createPayment = async (req, res) => {
 
 payment.getAllPayments = async (req, res) => {
   try {
-    const allPayments = await Payment.find();
-
+    const allPayments = await Payment.find()
+      .populate({ path: 'idUser', select: ['name', 'email', 'lastName'] });
     return res.status(200).json({
       allPayments
     });
