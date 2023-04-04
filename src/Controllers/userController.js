@@ -174,11 +174,11 @@ user.updateUser = async (req, res) => {
   const user = await User.findById(req.userId);
   if (user) {
     try {
-      const updateUser = await User.findByIdAndUpdate(req.userId, req.body);
-      console.log(updateUser);
+      await User.findByIdAndUpdate(req.userId, req.body);
+      const findUser = await User.findById(req.userId);
       return res.status(200).json({
         msg: 'Actualizado correctamente.',
-        updateUser
+        findUser
       });
     } catch {
       return res.status(400).json({
