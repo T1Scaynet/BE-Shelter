@@ -30,7 +30,11 @@ payment.createPayment = async (req, res) => {
         pending: ''
       },
       auto_return: 'approved',
-      binary_mode: true
+      binary_mode: true,
+      receipt: {
+        header: "Comprobante de pago",
+        footer: "Gracias por su compra"
+      }
     };
     const response = await mercadopago.preferences.create(preference);
     console.log(response.body.auto_return);
@@ -48,6 +52,29 @@ payment.createPayment = async (req, res) => {
     res.status(400).send({ error: error.message });
   }
 };
+
+payment.downloadReceipt = async (req, res) => {
+    
+  try {
+    const payment = await Payment.findById(req.params.id);
+    if (!payment) {
+      return res.status(404).json({
+        msg: 'The payment not found.'
+      });
+    }
+    // Generar el comprobante de pago utilizando la información de la base de datos
+    const receipt = generateReceipt(payment);
+    // Devolver el comprobante como una respuesta para descargar
+    res.setHeader('Content-Type', 'application/pdf');
+    res.setHeader('Content-Disposition', 'attachment; filename=comprobante.pdf');
+    res.send(receipt);
+  } catch {
+    return res.status(400).json({
+      msg: 'Ocurrio un problema, intentalo nuevamente.'
+    });
+  }
+};
+
 
 payment.getAllPayments = async (req, res) => {
   try {
