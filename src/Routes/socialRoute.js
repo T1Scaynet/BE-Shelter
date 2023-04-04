@@ -4,20 +4,20 @@ const router = Router();
 
 // Ruta de autenticación de Google
 router.get(
-  '/auth/google',
+  `${process.env.VITE_REACT_URL_FRONTEND}/auth/google`,
   passport.authenticate('google', {
     scope: ['profile', 'email']
   })
 );
 // Ruta de callback de Google
 router.get(
-  '/auth/google/callback',
+  `${process.env.VITE_REACT_URL_FRONTEND}/auth/google/callback`,
   passport.authenticate('google', {
     failureRedirect: '/login'
   }),
   (req, res) => {
     // Si la autenticación es exitosa, redirige al usuario a la página de inicio de tu aplicación
-    res.redirect(`${process.env.URL_FRONTEND}/?sesion=${req.user.token}`);
+    res.redirect(`${process.env.VITE_REACT_URL_FRONTEND}/?sesion=${req.user.token}`);
     return res.status(200).json({
       msg: req.user.msjLogin,
       auth: true,
