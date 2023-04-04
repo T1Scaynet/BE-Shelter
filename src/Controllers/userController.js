@@ -4,7 +4,7 @@ const jwt = require('jsonwebtoken');
 const nodemailer = require('nodemailer');
 // const { verify } = require('crypto');
 require('dotenv').config();
- 
+
 const user = {};
 
 const getUser = (data) => {
@@ -215,7 +215,7 @@ user.deactivateUser = async (req, res) => {
 
 user.profile = async (req, res) => {
   try {
-    const user = await User.findById(req.userId);
+    const user = await User.findById(req.userId).populate('roles');
     if (!user) {
       return res.status(404).json({
         msg: 'The user not found.'
@@ -266,9 +266,7 @@ user.getAllUser = async (req, res) => {
   }
 };
 
-
-
-//Este es el maldito codigo que funciona 
+// Este es el maldito codigo que funciona
 // user.getAllUser = async (req, res) => {
 //   try {
 //     const { name, email, roles, sortBy, search } = req.query;
@@ -319,9 +317,6 @@ user.getAllUser = async (req, res) => {
 //     });
 //   }
 // };
-
-
-
 
 // Register para crear usuarios 'moderator' y 'admin'
 user.createUser = async (req, res) => {
