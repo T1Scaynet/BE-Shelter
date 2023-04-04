@@ -22,6 +22,7 @@ const petSchema = new Schema({
   // En adopcion, en transito, adoptado
   state: {
     type: String,
+    enum: ['Disponible', 'Adoptado'],
     required: true
   },
   size: {
@@ -70,7 +71,7 @@ const petSchema = new Schema({
     type: Date,
     default: new Date()
   }
-});
+}); 
 
 petSchema.plugin(mongoosePaginate);
 module.exports = model('Pet', petSchema);

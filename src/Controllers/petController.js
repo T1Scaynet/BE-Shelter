@@ -108,6 +108,7 @@ pet.getPet = async (req, res) => {
 };
 
 pet.createPet = async (req, res) => {
+  console.log(req.body);
   const { name, type, genre, age, state, size, galery, history, weight, vaccine, castrated, disease, disability, coexistencePets, coexistenceKids } = req.body;
   if (name && type && genre && age && state && size && galery && history && weight && vaccine && castrated && coexistencePets && coexistenceKids) {
     try {
@@ -210,7 +211,7 @@ pet.updatePet = async (req, res) => {
 
 pet.deletePet = async (req, res) => {
   const pet = await Pet.findById(req.params.id);
-  console.log(pet);
+  // console.log(pet);
   if (pet) {
     try {
       const deletePet = await Pet.findByIdAndDelete(req.params.id);
@@ -236,6 +237,78 @@ pet.getFourPet = async (req, res) => {
     return res.status(200).json(cuatroUltimos);
   } catch (error) {
     res.status(400).send(error.message);
+  }
+};
+
+pet.getAllModerator = async (req, res) => {
+  const { type, genre, size, state, sort, page = 1, limit = 8, search } = req.query;
+
+  const options = {
+    page: parseInt(page),
+    limit: parseInt(limit)
+  };
+
+  const filters = {};
+
+  if (search) {
+    filters.$or = [
+      { name: { $regex: search, $options: 'i' } },
+      { type: { $regex: search, $options: 'i' } }, // esto es opcional por si queres buscar por type
+      { genre: { $regex: search, $options: 'i' } }, // esto es opcional por si queres buscar por genero
+      { size: { $regex: search, $options: 'i' } } // esto es opcional por si queres buscar por size
+    ];
+  }
+
+  if (state) {
+    filters.state = state;
+  };
+
+  if (type) {
+    filters.type = type;
+  };
+
+  if (genre) {
+    filters.genre = genre;
+  };
+
+  if (size) {
+    filters.size = size;
+  };
+
+  const sortOptions = {};
+
+  if (sort === 'alphabetical') {
+    sortOptions.name = 1;
+  };
+
+  if (sort === 'alphabetical_desc') {
+    sortOptions.name = -1;
+  };
+
+  try {
+    const result = await Pet.paginate({ ...filters }, {
+      ...options,
+      sort: sortOptions
+    });
+    console.log(result);
+    if (!result.totalDocs) {
+      return res.status(404).json({
+        msg: 'No se encontraron mascotas.'
+      });
+    }
+
+    return res.status(200).json({
+      totalPages: result.totalPages,
+      currentPage: result.page,
+      totalItems: result.totalDocs,
+      search,
+      filters,
+      pets: result.docs
+    });
+  } catch (error) {
+    return res.status(404).json({
+      msg: 'Ocurrio un problema, intenta nuevamente.'
+    });
   }
 };
 

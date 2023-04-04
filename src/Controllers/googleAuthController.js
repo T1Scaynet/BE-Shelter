@@ -14,16 +14,20 @@ passport.use(
     },
     async (accessToken, refreshToken, profile, done) => {
       try {
+        console.log(profile);
         const email = profile.emails[0].value;
         let user = await User.findOne({ email }).populate('roles');
         if (!user) {
           const [name, lastName] = profile.displayName.split(' ');
           const role = await Role.findOne({ name: 'client' });
+          const active = true;
           user = new User({
             name,
             lastName,
             email,
-            roles: [role.id]
+            roles: [role.id],
+            active,
+            avatar: profile?.photos?.[0]?.value || ''
           });
           await user.save();
           user.msjLogin = 'Usuario creado correctamente.';

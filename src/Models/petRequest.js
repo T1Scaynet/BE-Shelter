@@ -1,4 +1,5 @@
 const { Schema, model } = require('mongoose');
+const mongoosePaginate = require('mongoose-paginate-v2');
 
 const petRequest = new Schema({
   idPet: {
@@ -26,7 +27,7 @@ const petRequest = new Schema({
     required: true
   },
   phone: {
-    type: String,
+    type: Number,
     required: true
   },
   otherPets: {
@@ -44,6 +45,7 @@ const petRequest = new Schema({
   // adopcion para mi o para un tercero (array de string)
   adoption: {
     type: String,
+    enum: ['Es para un tercero', 'Es para mi'],
     required: true
   },
   familyMembers: {
@@ -52,12 +54,15 @@ const petRequest = new Schema({
   },
   // Puede tener 3 estados: Aprobado, Desaprobado y en proceso
   state: {
-    type: String
+    type: String,
+    enum: ['Aprobado', 'Desaprobado', 'En proceso']
   },
   createAt: {
     type: Date,
     default: new Date()
   }
 });
+
+petRequest.plugin(mongoosePaginate);
 
 module.exports = model('PetRequest', petRequest);

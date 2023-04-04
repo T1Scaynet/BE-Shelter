@@ -27,8 +27,14 @@ petRequest.postForm = async (req, res) => {
     const mensaje = {
       from: 'fundacionhenry@gmail.com',
       to: email,
-      subject: 'Correo de prueba de bienvenida',
-      text: 'Envio de correo'
+      subject: 'Correo de comprobacion de solicitud de adopcion recibido',
+      text: `Se envio el formulario de contacto con los siguientes datos:
+      nombre: ${name} 
+      apellido: ${lastName} 
+      email: ${email}
+      telefono: ${phone} 
+      direccion: ${address}
+      Nos estaremos comunicando, fundacionhenry@gmail.com`
     };
 
     const transport = nodemailer.createTransport(config);
@@ -38,7 +44,7 @@ petRequest.postForm = async (req, res) => {
     console.log(info);
   };
   try {
-    const state = 'In Process';
+    const state = 'En proceso';
     const newForm = new PetRequest({
       idPet,
       idUser,
@@ -59,7 +65,9 @@ petRequest.postForm = async (req, res) => {
     newForm.save();
     res.status(200).json(newForm);
   } catch (error) {
-    res.status(400).send(error.message);
+    res.status(400).json({
+      msg: 'Ocurrio un problema, intentalo nuevamente.'
+    });
   }
 };
 
@@ -68,17 +76,61 @@ petRequest.deleteForm = async (req, res) => {
     const deleted = await PetRequest.findByIdAndDelete(req.params.id);
     res.status(200).send(`el formulario con el id: ${deleted.id}, fue eliminado correctamente`);
   } catch (error) {
-    res.status(400).send(error.message);
+    res.status(400).json({
+      msg: 'Ocurrio un problema, intentalo nuevamente.'
+    });
   }
 };
 
 petRequest.getAllForms = async (req, res) => {
+  const { state, adoption, sort, search, page = 1, limit = 8 } = req.query;
+  const options = {
+    page: parseInt(page),
+    limit: parseInt(limit)
+  };
+
+  const filters = {};
+
+  if (search) {
+    filters.$or = [{ name: { $regex: search, $options: 'i' } }];
+  }
+
+  if (state) {
+    filters.state = state;
+  };
+
+  if (adoption) {
+    filters.adoption = adoption;
+  };
+
+  const sortOptions = {};
+
+  if (sort === 'old') {
+    sortOptions.createAt = 1;
+  };
+
+  if (sort === 'recent') {
+    sortOptions.createAt = -1;
+  };
+
   try {
-    const allForms = await PetRequest.find({});
-    if (!allForms.length) throw Error('No hay formularios disponibles');
-    res.status(200).json(allForms);
+    const paginateForm = await PetRequest.paginate({ ...filters }, {
+      ...options,
+      sort: sortOptions
+    });
+
+    return res.status(200).json({
+      totalPages: paginateForm.totalPages,
+      currentPage: paginateForm.page,
+      totalItems: paginateForm.totalDocs,
+      search,
+      filters,
+      forms: paginateForm.docs
+    });
   } catch (error) {
-    res.status(400).send(error.message);
+    res.status(400).json({
+      msg: 'Ocurrio un problema, intentalo nuevamente.'
+    });
   }
 };
 
@@ -88,25 +140,34 @@ petRequest.getForm = async (req, res) => {
     if (!form) throw Error(`El formulario con el id: ${req.params.id} no existe`);
     res.status(200).json(form);
   } catch (error) {
-    res.status(400).send(error.message);
+    res.status(400).json({
+      msg: 'Ocurrio un problema, intentalo nuevamente.'
+    });
   }
 };
 
 petRequest.stateForm = async (req, res) => {
-  const { state } = req.body;
-  try {
-    await PetRequest.findByIdAndUpdate(req.params.id, state);
-    const request = PetRequest.findById(req.params.id);
-    if (state === 'approved') {
-      await User.findByIdAndUpdate(request.idUser, { adoptions: request.idPet });
-      await Pet.findByIdAndUpdate(request.idUser, { adoptedBy: request.idUser });
+  const state = req.body;
+  if (state) {
+    try {
+      await PetRequest.findByIdAndUpdate(req.params.id, state);
+      const request = await PetRequest.findById(req.params.id);
+
+      if (state.state === 'Aprobado') {
+        await User.findByIdAndUpdate(request.idUser, { adoptions: request.idPet });
+        await Pet.findByIdAndUpdate(request.idPet, { adoptedBy: request.idUser, state: 'Adoptado' });
+      };
+      return res.status(200).json({
+        msg: 'Estado actualizado correctamente.'
+      });
+    } catch (error) {
+      return res.status(400).json({
+        msg: 'Ocurrio un problema, intentalo nuevamente.'
+      });
     }
-    return res.status(200).json({
-      msg: 'Estado actualizado correctamente.'
-    });
-  } catch (error) {
+  } else {
     return res.status(400).json({
-      msg: 'Ocurrio un problema, intentalo nuevamente.'
+      msg: 'Campos incompletos, se necesita un state.'
     });
   }
 };
