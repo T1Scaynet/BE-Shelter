@@ -4,14 +4,14 @@ const router = Router();
 
 // Ruta de autenticación de Google
 router.get(
-  `${process.env.VITE_REACT_URL_FRONTEND}/auth/google`,
+  '/auth/google',
   passport.authenticate('google', {
     scope: ['profile', 'email']
   })
 );
 // Ruta de callback de Google
 router.get(
-  `${process.env.VITE_REACT_URL_FRONTEND}/auth/google/callback`,
+  '/auth/google/callback',
   passport.authenticate('google', {
     failureRedirect: '/login'
   }),
