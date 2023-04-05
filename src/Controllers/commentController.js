@@ -1,15 +1,14 @@
-const { request, response } = require('express');
 const Comment = require('../Models/comment');
 
-const postComment = (req = request, res = response) => {
-  const idUser = req.userId;
-  const { idPet, stars, comments, image } = req.body;
+const comment = {};
 
-  console.log(idUser);
-  if (!idPet || !idUser || !stars) throw Error('Faltan datos');
+comment.postComment = (req, res) => {
+  const idUser = req.userId;
+  const { stars, comments, image } = req.body;
+
+  if (!idUser || !stars) throw Error('Faltan datos');
   try {
     const newComment = new Comment({
-      idPet,
       idUser,
       stars,
       comments,
@@ -22,17 +21,16 @@ const postComment = (req = request, res = response) => {
   }
 };
 
-const getComments = async (req = request, res = response) => {
+comment.getComments = async (req, res) => {
   try {
-    const allComments = await Comment.find({});
+    const allComments = await Comment.find().populate({ path: 'idUser', select: ['name', 'lastName', 'avatar'] });
     if (!allComments.length) throw Error('No hay comentarios existentes');
     res.status(200).json(allComments);
   } catch (error) {
     res.status(400).send(error.message);
   }
 };
-
-const deleteComment = async (req = request, res = response) => {
+comment.deleteComment = async (req, res) => {
   try {
     const deleted = await Comment.findByIdAndDelete(req.params.id);
     res.status(200).send(`El comentario con el id: ${deleted.id}, fue borrado exitosamente`);
@@ -41,7 +39,7 @@ const deleteComment = async (req = request, res = response) => {
   }
 };
 
-const putComment = async (req = request, res = response) => {
+comment.putComment = async (req, res) => {
   try {
     const updateComment = await Comment.findByIdAndUpdate(req.params.id, req.body);
     console.log(updateComment);
@@ -51,9 +49,4 @@ const putComment = async (req = request, res = response) => {
   }
 };
 
-module.exports = {
-  postComment,
-  getComments,
-  deleteComment,
-  putComment
-};
+module.exports = comment;
