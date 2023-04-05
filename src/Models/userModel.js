@@ -30,7 +30,8 @@ const userSchema = new Schema({
     required: false
   },
   avatar: {
-    type: String
+    type: String,
+    default: 'https://st4.depositphotos.com/27392032/41587/i/450/depositphotos_415872184-stock-photo-i-love-dog-cat-concept.jpg'
   },
   phone: {
     type: Number,
