@@ -13,7 +13,7 @@ const authToken = async (req, res, next) => {
       req.userId = verify;
 
       const user = await User.findById(req.userId, { password: 0 });
-      console.log(user);
+
       if (!user) return res.status(404).json({ msg: 'No user found.' });
       next();
     } else {
