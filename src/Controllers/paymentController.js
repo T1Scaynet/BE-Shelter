@@ -32,8 +32,8 @@ payment.createPayment = async (req, res) => {
       auto_return: 'approved',
       binary_mode: true,
       receipt: {
-        header: "Comprobante de pago",
-        footer: "Gracias por su compra"
+        header: 'Comprobante de pago',
+        footer: 'Gracias por su compra'
       }
     };
     const response = await mercadopago.preferences.create(preference);
@@ -54,7 +54,6 @@ payment.createPayment = async (req, res) => {
 };
 
 payment.downloadReceipt = async (req, res) => {
-    
   try {
     const payment = await Payment.findById(req.params.id);
     if (!payment) {
@@ -75,16 +74,50 @@ payment.downloadReceipt = async (req, res) => {
   }
 };
 
-
 payment.getAllPayments = async (req, res) => {
+  const { title, status, sort, page = 1, limit = 8 } = req.query;
+
+  const options = {
+    page: parseInt(page),
+    limit: parseInt(limit),
+    populate: ({ path: 'idUser', select: ['name', 'email', 'lastName'] })
+  };
+
+  const filters = {};
+
+  if (title) {
+    filters.title = title;
+  };
+
+  if (status) {
+    filters.status = status;
+  };
+
+  const sortOptions = {};
+
+  if (sort === 'old') {
+    sortOptions.createAt = 1;
+  };
+
+  if (sort === 'recent') {
+    sortOptions.createAt = -1;
+  };
+
   try {
-    const allPayments = await Payment.find()
-      .populate({ path: 'idUser', select: ['name', 'email', 'lastName'] });
+    const allPayments = await Payment.paginate({ ...filters }, {
+      ...options,
+      sort: sortOptions
+    });
+
     return res.status(200).json({
-      allPayments
+      totalPages: allPayments.totalPages,
+      currentPage: allPayments.currentPage,
+      totalItems: allPayments.totalItems,
+      filters,
+      payments: allPayments.docs
     });
   } catch (error) {
-    return res.state(400).json({
+    return res.status(400).json({
       msg: 'Ocurrio un problema, intentalo nuevamente.'
     });
   }
@@ -92,7 +125,7 @@ payment.getAllPayments = async (req, res) => {
 
 payment.getPayment = async (req, res) => {
   try {
-    const payment = await Payment.findById(req.params.id);
+    const payment = await Payment.findById(req.params.id).populate({ path: 'idUser', select: ['name', 'email', 'lastName'] });
     if (payment) {
       return res.status(404).json({
         msg: 'The payment not found.'
@@ -103,7 +136,7 @@ payment.getPayment = async (req, res) => {
       });
     }
   } catch {
-    return res.state(400).json({
+    return res.status(400).json({
       msg: 'Ocurrio un problema, intentalo nuevamente.'
     });
   }
