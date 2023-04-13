@@ -253,14 +253,61 @@ user.getUser = async (req, res) => {
 };
 
 user.getAllUser = async (req, res) => {
-  try {
-    const users = await User.find().populate('roles');
+  const { active, roles, sort, search, page = 1, limit = 8 } = req.query;
+  const options = {
+    page: parseInt(page),
+    limit: parseInt(limit),
+    populate: 'roles'
+  };
 
+  const filters = {};
+
+  if (search) {
+    filters.$or = [
+      { name: { $regex: search, $options: 'i' } },
+      { email: { $regex: search, $options: 'i' } }
+    ];
+  }
+  if (active) {
+    filters.active = (active === 'true');
+  };
+
+  if (roles) {
+    filters.roles = [roles];
+  };
+
+  const sortOptions = {};
+
+  if (sort === 'alphabetical') {
+    sortOptions.name = 1;
+  };
+
+  if (sort === 'alphabetical_desc') {
+    sortOptions.name = -1;
+  };
+
+  console.log(filters);
+  try {
+    const paginateUser = await User.paginate({ ...filters }, {
+      ...options,
+      sort: sortOptions
+    });
+
+    if (!paginateUser.totalDocs) {
+      return res.status(404).json({
+        msg: 'No se encontraron usuarios.'
+      });
+    };
     return res.status(200).json({
-      users
+      totalPages: paginateUser.totalPages,
+      currentPage: paginateUser.page,
+      totalItems: paginateUser.totalDocs,
+      search,
+      filters,
+      forms: paginateUser.docs
     });
   } catch (error) {
-    return res.state(400).json({
+    return res.status(400).json({
       msg: 'Ocurrio un problema, intentalo nuevamente.'
     });
   }
