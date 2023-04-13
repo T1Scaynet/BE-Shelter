@@ -1,6 +1,7 @@
 // const { response } = require('express');
 // const mercadopago = require('mercadopago');
 const Pet = require('../Models/petModel');
+const mongoose = require('mongoose');
 
 const pet = {};
 
@@ -14,6 +15,7 @@ const getPet = (data) => {
 
 pet.getAllPets = async (req, res) => {
   const { type, genre, size, state, sort, page = 1, limit = 8, search } = req.query;
+  console.log('Search en query', search);
 
   const options = {
     page: parseInt(page),
@@ -22,14 +24,11 @@ pet.getAllPets = async (req, res) => {
 
   const filters = {};
 
-  if (search) {
-    filters.$or = [
-      { name: { $regex: search, $options: 'i' } },
-      { type: { $regex: search, $options: 'i' } }, // esto es opcional por si queres buscar por type
-      { genre: { $regex: search, $options: 'i' } }, // esto es opcional por si queres buscar por genero
-      { size: { $regex: search, $options: 'i' } } // esto es opcional por si queres buscar por size
-    ];
-  }
+  filters.$or = [
+    { name: { $regex: search, $options: 'i' } },
+    { genre }, // esto es opcional por si queres buscar por genero
+    { _id: search.match(/^[0-9a-fA-F]{24}$/) ? new mongoose.Types.ObjectId(search) : null }
+  ].filter(Boolean);
 
   if (state) {
     filters.state = state;
@@ -108,7 +107,6 @@ pet.getPet = async (req, res) => {
 };
 
 pet.createPet = async (req, res) => {
-  console.log(req.body);
   const { name, type, genre, age, state, size, galery, history, weight, vaccine, castrated, disease, disability, coexistencePets, coexistenceKids } = req.body;
   if (name && type && genre && age && state && size && galery && history && weight && vaccine && castrated && coexistencePets && coexistenceKids) {
     try {
