@@ -282,13 +282,13 @@ pet.getAllModerator = async (req, res) => {
   if (sort === 'alphabetical_desc') {
     sortOptions.name = -1;
   };
-
+  console.log(filters);
   try {
     const result = await Pet.paginate({ ...filters }, {
       ...options,
       sort: sortOptions
     });
-    console.log(result);
+
     if (!result.totalDocs) {
       return res.status(404).json({
         msg: 'No se encontraron mascotas.'
