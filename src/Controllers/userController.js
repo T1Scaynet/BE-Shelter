@@ -2,6 +2,7 @@ const User = require('../Models/userModel');
 const Role = require('../Models/roleModel');
 const jwt = require('jsonwebtoken');
 const nodemailer = require('nodemailer');
+const mongoose = require('mongoose');
 // const { verify } = require('crypto');
 require('dotenv').config();
 
@@ -265,8 +266,9 @@ user.getAllUser = async (req, res) => {
   if (search) {
     filters.$or = [
       { name: { $regex: search, $options: 'i' } },
-      { email: { $regex: search, $options: 'i' } }
-    ];
+      { email: { $regex: search, $options: 'i' } },
+      { _id: search.match(/^[0-9a-fA-F]{24}$/) ? new mongoose.Types.ObjectId(search) : null }
+    ].filter(Boolean);
   }
   if (active) {
     filters.active = (active === 'true');
