@@ -1,4 +1,5 @@
 const mercadopago = require('mercadopago');
+const generateReceipt = require('mercadopago');
 const Payment = require('../Models/paymentModel');
 
 const payment = {};
@@ -111,8 +112,8 @@ payment.getAllPayments = async (req, res) => {
 
     return res.status(200).json({
       totalPages: allPayments.totalPages,
-      currentPage: allPayments.currentPage,
-      totalItems: allPayments.totalItems,
+      currentPage: allPayments.page,
+      totalItems: allPayments.totalDocs,
       filters,
       payments: allPayments.docs
     });
